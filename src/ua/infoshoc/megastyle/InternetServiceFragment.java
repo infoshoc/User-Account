@@ -186,7 +186,7 @@ public class InternetServiceFragment extends Fragment{
 		textViews[NETMASK_IDX] = (TextView) rootView.findViewById(R.id.netmaskTextView);
 		textViews[SPEED_IDX] = (TextView) rootView.findViewById(R.id.speedTextView);
 		textViews[CID_IDX] = (TextView) rootView.findViewById(R.id.cidTextView);
-		textViews[SERVICE_NAME_IDX] = (TextView) rootView.findViewById(R.id.serviceStatusTextView);
+		textViews[SERVICE_STATUS_IDX] = (TextView) rootView.findViewById(R.id.serviceStatusTextView);
 		textViews[FINISH_IDX] = (TextView) rootView.findViewById(R.id.finishTextView);
 		fill();
 		
