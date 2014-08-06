@@ -160,6 +160,8 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.action_settings:
+			mTitle = getString(R.id.action_settings);
+			getActionBar().setTitle(mTitle);
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction  = fragmentManager.beginTransaction();
 			fragmentTransaction
