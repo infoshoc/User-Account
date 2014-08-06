@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Кабинет Пользователя</string>
+    <string name="login_text_view">Вход</string>
+    <string name="username_edit_text">Имя пользователя</string>
+    <string name="password_edit_text">Пароль</string>
+    <string name="login_button">Войти</string>
+    
+    <string name="title_user_info">Информация о пользователе</string>
+    <string name="title_money">Денежные операции</string>
+    <string name="title_payments">Оплаты</string>
+    <string name="title_withdrawal">Снятие денег</string>
+    <string name="title_internet">Интернет</string>
+    <string name="title_statistics">Статистика</string>
+    <string name="title_support">Техническая поддержка</string>
+    <string name="title_logout">Выход</string>
+    
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="login_key_text_view">Логин:</string>
+    <string name="deposit_key_text_view">Депозит:</string>
+    <string name="additional_deposit_key_text_view">Дополнительный депозит:</string>
+    <string name="credit_key_text_view">Кредит:</string>
+    <string name="credit_date_key_text_view">Дата:</string>
+    <string name="discount_key_text_view">Скидка:</string>
+    <string name="discount_date_key_text_view">Дата:</string>
+    <string name="name_key_text_view">ФИО:</string>
+    <string name="phone_key_text_view">Телефон:</string>
+    <string name="address_key_text_view">Адрес:</string>
+    <string name="email_key_text_view">E-mail:</string>
+    <string name="contract_key_text_view">Договор:</string>
+    <string name="contract_date_key_text_view">Дата:</string>
+    <string name="status_key_text_view">Статус:</string>
+    <string name="service_key_textview">Услуга:</string>
+    <string name="tariff_key_text_view">Тарифный план:</string>
+    <string name="simultaneously_key_text_view">Одновременно:</string>
+    <string name="ip_key_text_view">IP:</string>
+    <string name="netmask_key_text_view">Netmask:</string>
+    <string name="speed_key_text_view">Скорость (Kb):</string>
+    <string name="cid_key_text_view">CID:</string>
+    <string name="service_status_key_text_view">Статус:</string>
+    <string name="payment_key_text_view">Переодические платежи:</string>
+    <string name="finish_key_text_view">Окончание:</string>
+    
+    <string name="date_header_text_view">Дата</string>
+    <string name="description_header_text_view">Описание</string>
+    <string name="sum_header_text_view">Сумма</string>
+    <string name="deposit_header_text_view">Депозит</string>
+    <string name="type_header_text_view">Тип</string>
+    <string name="overall_key_text_view">Всего:</string>
+    <string name="sum_key_text_view">Сумма:</string>
+    
+    <string name="ip_header_text_view">IP</string>
+    <string name="cid_header_text_view">CID</string>
+    <string name="duration_header_text_view">Продолжительность</string>
+    <string name="received_header_text_view">Получено</string>
+    <string name="sent_header_text_view">Отправлено</string>
+    
+    
+    <string name="subject_hint_edit_text">Тема</string>
+    <string name="chapter_spinner">Разделы</string>
+    <string name="message_hint_edit_text">Сообщение</string>
+    <string name="browse_button">Обзор&#8230;</string>
+    <string name="state_spinner">Состояние</string>
+    <string name="priority_spinner">Приоритет</string>
+    <string name="send_button">Отправить</string>
+    
+    <string name="payment_tab">Оплаты</string>
+    <string name="withdrawal_tab">Снятие денег</string>
+    <string name="internet_tab">Интернет</string>
+    <string name="statistics_tab">Статистика</string>
+    
+    <string name="low_deposit_ticker">Депозит подходит к концу</string>
+    <string name="warning_title">Предупреждение!</string>  
+    
+    <string name="switch_notification">Предупреждать при дотижении депозитом критического уровня</string>
+    <string name="critical_deposit_edit_text_hint">Критическая сумма депозита</string>
+    
+    <string name="loading_title">Подождите пожалуйста&#8230;</string>
+    <string name="loading_message">Загрузка</string>
+</resources>
