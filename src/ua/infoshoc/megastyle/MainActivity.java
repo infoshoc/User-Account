@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -50,6 +51,21 @@ public class MainActivity extends ActionBarActivity implements
 		if ( getSharedPreferences(SettingsFragment.SHARED_PREFERENCES_NAME, 0).getBoolean(SettingsFragment.NOTIFICATION_SWITCH_NAME, false) ){
 			startService(service);
 		}
+		
+		//Set up settings fragment is it is
+		if ( savedInstanceState != null && savedInstanceState.getBoolean(IS_SETTINGS_KEY) ){
+			openSettings();
+		}
+	}
+	
+	
+	private final static String IS_SETTINGS_KEY = "isSettings";
+	Boolean isSettings = false;
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(IS_SETTINGS_KEY, isSettings);
 	}
 
 
@@ -59,26 +75,23 @@ public class MainActivity extends ActionBarActivity implements
 	private static final int SECTION_NUMBER_SUPPORT = 3;
 	private static final int SECTION_NUMBER_LOGOUT = 4;
 	
-	private UserInfoFragment userInfoFragment;
+	
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
+		isSettings = false;
+		
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		
-		switch ( position ){		
+		switch ( position ){
 		case SECTION_NUMBER_USER_INFO:
-			mTitle = getString(R.string.title_user_info);
-			
-			if ( userInfoFragment == null ){
-				userInfoFragment = new UserInfoFragment();
-			}
-			
+			mTitle = getString(R.string.title_user_info);		
 			fragmentManager
 				.beginTransaction()
 				.replace(
 						R.id.container,
-						userInfoFragment
+						new UserInfoFragment()
 				).commit();
 			break;
 		case SECTION_NUMBER_MONEY_OPERATIONS:			
@@ -93,20 +106,20 @@ public class MainActivity extends ActionBarActivity implements
 		case SECTION_NUMBER_INTERNET:	
 			mTitle = getString(R.string.title_internet);		
 			fragmentManager
-			.beginTransaction()
-			.replace(
-					R.id.container,
-					new InternetFragment()
-			).commit();
+				.beginTransaction()
+				.replace(
+						R.id.container,
+						new InternetFragment()
+				).commit();
 			break;
 		case SECTION_NUMBER_SUPPORT:
 			mTitle = getString(R.string.title_support);					
 			fragmentManager
-			.beginTransaction()
-			.replace(
-				R.id.container,
-				new SupportFragment()
-					).commit();
+				.beginTransaction()
+				.replace(
+					R.id.container,
+					new SupportFragment()
+						).commit();
 			break;
 		case SECTION_NUMBER_LOGOUT:
 			String sharedPreferncesNames[] = {
@@ -127,7 +140,6 @@ public class MainActivity extends ActionBarActivity implements
 			Intent intent = new Intent ( getApplicationContext(), LoginActivity.class );	
 			startActivity(intent);
 			break;
-
 		}		
 	}
 
@@ -152,6 +164,20 @@ public class MainActivity extends ActionBarActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	private void openSettings(){
+		isSettings = true;
+		mTitle = getString(R.string.action_settings);
+		getActionBar().setTitle(mTitle);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction  = fragmentManager.beginTransaction();
+		fragmentTransaction
+			.replace(
+					R.id.container,
+					new SettingsFragment()
+			).addToBackStack(null)
+			.commit();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -160,17 +186,7 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.action_settings:
-			mTitle = getString(R.id.action_settings);
-			getActionBar().setTitle(mTitle);
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			FragmentTransaction fragmentTransaction  = fragmentManager.beginTransaction();
-			fragmentTransaction
-				.replace(
-						R.id.container,
-						new SettingsFragment()
-				).addToBackStack(null)
-				.commit();
-			
+			openSettings();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
