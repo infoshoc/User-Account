@@ -30,7 +30,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
 		loginRequest.addParam ( "passwd", password );
 		loginRequest.addParam ( "user", login );
 		
-		TagNode result = loginRequest.send();
+		TagNode result = loginRequest.send(context.getResources());
 		
 		//check errors
 		String sid = null;
@@ -104,9 +104,6 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-				
-		Request.setResources(getResources());
-		
 		
 		loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(this);

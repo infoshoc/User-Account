@@ -78,7 +78,7 @@ public class StatisticsFragment extends Fragment implements OnTouchListener {
 			request.addCookie(SID_NAME, sid);
 			TagNode result = null;
 			try {
-				result = request.send();
+				result = request.send(getActivity().getResources());
 			} catch (KeyManagementException | CertificateException
 					| KeyStoreException | NoSuchAlgorithmException
 					| IOException e) {

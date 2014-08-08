@@ -37,6 +37,7 @@ public class WithdrawalFragment extends Fragment {
 	private static final String INDEX_NAME = "index";
 	private static final String INDEX_VALUE = "41";
 	private static final String PAGE_NAME = "pg";
+	private static final String PAGE_VALUE = "0";
 	private static final String SID_NAME = "sid";
 	
 	private static final int COLUMNS_NUMBER = 5;
@@ -63,11 +64,11 @@ public class WithdrawalFragment extends Fragment {
 			Request request = new Request(URL);
 			request.addParam(INDEX_NAME, INDEX_VALUE);
 			request.addParam(SID_NAME, sid);
-			request.addParam(PAGE_NAME, "0");
+			request.addParam(PAGE_NAME, PAGE_VALUE);
 			request.addCookie(SID_NAME, sid);
 			TagNode result = null;
 			try {
-				result = request.send();
+				result = request.send(getActivity().getResources());
 			} catch (KeyManagementException | CertificateException
 					| KeyStoreException | NoSuchAlgorithmException
 					| IOException e) {

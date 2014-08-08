@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 
 public class NotificationService extends Service{
-	private final static Integer TIMEOUT = 10000;
+	private final static Integer TIMEOUT = 60*60*1000;
 	private final static Double EPS = 1e-4;
 	private final static Integer NOTIFY_ID = 101;
 
@@ -47,18 +47,17 @@ public class NotificationService extends Service{
 			userInfo
 				.setLogin(login)
 				.setPassword(password);
-			String sid = null;                                              			
+			String sid = null;                                        			
 			while (working) {
 				synchronized (this) {         
 					Context context = getApplicationContext();
 					userInfo.setContext(context);
-					Request.setResources(context.getResources());
 					try {                          
 						userInfo.update(sid);
 					} catch (Exception e) {                
 						e.printStackTrace();
 					} finally {
-						if ( userInfo == null ){                           
+						if ( userInfo == null ){                         
 						}
 						Double deposit = userInfo.getDeposit();            		
 						Intent notificationIntent = new Intent(getApplicationContext(), NotificationService.class);

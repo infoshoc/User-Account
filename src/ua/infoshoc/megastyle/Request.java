@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.htmlcleaner.HtmlCleaner;
@@ -23,17 +24,6 @@ import android.content.res.Resources;
 
 public class Request{
 	
-	private class ParameterValue{
-		private String parameter;
-		private String value;
-		ParameterValue ( String _parameter, String _value ){
-			parameter = _parameter;
-			value = _value;
-		}
-		public String getParameter(){return parameter;}
-		public String getValue(){return value;}
-	}
-	
 	private String url;
 	private ArrayList<ParameterValue> params, cookies;
 	Request( String url ){
@@ -41,12 +31,14 @@ public class Request{
 		params = new ArrayList<ParameterValue>();
 		cookies = new ArrayList<ParameterValue>();
 	}
-	public void addParam( String key, String value ){
+	public Request addParam( String key, String value ){
 		params.add(new ParameterValue(key, value));
+		return this;
 	}
 	
-	public void addCookie( String key, String value ){
+	public Request addCookie( String key, String value ){
 		cookies.add(new ParameterValue(key, value));
+		return this;
 	}
 		
 	private String formURL(){
@@ -76,12 +68,8 @@ public class Request{
 		return result;
 	}
 	
-	private static Resources resources;
-	public static void setResources(Resources resources){Request.resources = resources;}
-	
-	
-	public TagNode send() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException{
-		TagNode rootNode = null;
+	private static SSLSocketFactory sslSocketFactory;
+	private static void getSSLSocketFactory(Resources resources) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException{
 		// Load CAs from an InputStream
 		// (could be from a resource or ByteArrayInputStream or ...)
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -103,20 +91,40 @@ public class Request{
 		
 		// Create an SSLContext that uses our TrustManager
 		SSLContext context = SSLContext.getInstance("TLSv1.2");
-		context.init(null, tmf.getTrustManagers(), null);
+		context.init(null, tmf.getTrustManagers(), null);	
+		sslSocketFactory = context.getSocketFactory();
+	}
+	
+	public TagNode send(Resources resources) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException{
+		TagNode rootNode = null;
+
+		if ( sslSocketFactory == null ){
+			getSSLSocketFactory(resources);
+		}
 		
-		// Tell the URLConnection to use a SocketFactory from our SSLContext
 		URL url = new URL(formURL());
 		HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
 		String cookies = formCookies();
 		if ( cookies != null ){
 			urlConnection.setRequestProperty("Cookie", cookies );
 		}
-		urlConnection.setSSLSocketFactory(context.getSocketFactory());
+		urlConnection.setSSLSocketFactory(sslSocketFactory);
 		urlConnection.connect();
 		InputStream in = urlConnection.getInputStream();
 		HtmlCleaner cleaner = new HtmlCleaner();
 		rootNode = cleaner.clean(in);
 		return rootNode;			
+	}
+	
+	
+	private class ParameterValue{
+		private String parameter;
+		private String value;
+		ParameterValue ( String _parameter, String _value ){
+			parameter = _parameter;
+			value = _value;
+		}
+		public String getParameter(){return parameter;}
+		public String getValue(){return value;}
 	}
 }

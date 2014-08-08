@@ -1,11 +1,5 @@
 package ua.infoshoc.megastyle;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-
 import org.htmlcleaner.TagNode;
 
 import android.content.Context;
@@ -117,16 +111,15 @@ public class UserInfoFragment extends Fragment {
 	
 	/*update fields*/
 	public void update(String sid) throws Exception{
-		Request request = new Request(URL);
-		request.addParam(INDEX_NAME, INDEX_VALUE);
-		request.addParam(SID_NAME, sid);
-		request.addCookie(SID_NAME, sid);
+		Request request = 
+			new Request(URL)
+				.addParam(INDEX_NAME, INDEX_VALUE)
+				.addParam(SID_NAME, sid)
+				.addCookie(SID_NAME, sid);
 		TagNode result = null;
 		try {
-			result = request.send();
-		} catch (KeyManagementException | CertificateException
-				| KeyStoreException | NoSuchAlgorithmException
-				| IOException e) {
+			result = request.send(context.getResources());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{                         
 			TagNode div = result.findElementByAttValue("class", "kabinet-center_col", true, true);
