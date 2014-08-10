@@ -1,6 +1,9 @@
 package ua.infoshoc.megastyle;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
@@ -9,11 +12,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends ActionBarActivity implements
 	NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+	public void setStartedUpdate(){
+		progressBar.setVisibility(View.VISIBLE);
+	}
+	public void setFinishedUpdate(){
+		progressBar.setVisibility(View.INVISIBLE);
+	}
 	
 	public ProgressBar progressBar; 
 
@@ -67,6 +78,7 @@ public class MainActivity extends ActionBarActivity implements
 		outState.putBoolean(IS_SETTINGS_KEY, isSettings);
 	}
 
+	
 
 	private static final int SECTION_NUMBER_USER_INFO = 0;
 	private static final int SECTION_NUMBER_MONEY_OPERATIONS = 1;
@@ -75,6 +87,7 @@ public class MainActivity extends ActionBarActivity implements
 	private static final int SECTION_NUMBER_LOGOUT = 4;
 	
 	
+	private AlertDialog.Builder alertDialogBuilder;
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
@@ -121,23 +134,38 @@ public class MainActivity extends ActionBarActivity implements
 						).commit();
 			break;
 		case SECTION_NUMBER_LOGOUT:
-			String sharedPreferncesNames[] = {
-					LoginActivity.SHARED_PREFERENCES_NAME,
-					UserInfoFragment.SHARED_PREFERENCES_NAME,
-					InternetServiceFragment.SHARED_PREFERENCES_NAME,
-					PaymentsFragment.SHARED_PREFERENCES_NAME,
-					StatisticsFragment.SHARED_PREFERENCES_NAME,
-					WithdrawalFragment.SHARED_PREFERENCES_NAME
-			};
-			
-			for (int i = 0; i < sharedPreferncesNames.length; i++) {
-				getSharedPreferences(sharedPreferncesNames[i], 0).edit().clear().apply();
+			if ( alertDialogBuilder == null ) {
+				alertDialogBuilder = 
+					new AlertDialog.Builder(getApplicationContext())
+					.setTitle(R.string.title_logout)
+					.setPositiveButton(R.string.logout_button, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							String sharedPreferncesNames[] = {
+									LoginActivity.SHARED_PREFERENCES_NAME,
+									UserInfoFragment.SHARED_PREFERENCES_NAME,
+									InternetServiceFragment.SHARED_PREFERENCES_NAME,
+									PaymentsFragment.SHARED_PREFERENCES_NAME,
+									StatisticsFragment.SHARED_PREFERENCES_NAME,
+									WithdrawalFragment.SHARED_PREFERENCES_NAME
+							};
+							
+							for (int i = 0; i < sharedPreferncesNames.length; i++) {
+								getSharedPreferences(sharedPreferncesNames[i], 0).edit().clear().apply();
+							}
+							
+							stopService(service);
+							
+							Intent intent = new Intent ( getApplicationContext(), LoginActivity.class );	
+							startActivity(intent);							
+						}
+					})
+					.setNegativeButton(R.string.escape_button, null)
+					.setMessage(R.string.logout_warning);
 			}
 			
-			stopService(service);
+			alertDialogBuilder.show();
 			
-			Intent intent = new Intent ( getApplicationContext(), LoginActivity.class );	
-			startActivity(intent);
 			break;
 		}		
 	}

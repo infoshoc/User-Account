@@ -11,6 +11,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -30,6 +31,12 @@ public class Request{
 		this.url = url;
 		params = new ArrayList<ParameterValue>();
 		cookies = new ArrayList<ParameterValue>();
+	}
+	Request( String url, ParameterValue params[]) {
+		this(url);
+		if ( params != null ){
+			Collections.addAll(this.params, params);
+		}
 	}
 	public Request addParam( String key, String value ){
 		params.add(new ParameterValue(key, value));
@@ -117,7 +124,7 @@ public class Request{
 	}
 	
 	
-	private class ParameterValue{
+	public static class ParameterValue{
 		private String parameter;
 		private String value;
 		ParameterValue ( String _parameter, String _value ){

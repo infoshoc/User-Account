@@ -1,5 +1,6 @@
 package ua.infoshoc.megastyle;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -35,10 +37,10 @@ public class SettingsFragment extends Fragment implements OnCheckedChangeListene
 		criticalDepositEditText.setOnEditorActionListener(this);
 		
 		SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SettingsFragment.SHARED_PREFERENCES_NAME, 0);
+		sharedPreferencesEditor = sharedPreferences.edit();
 		notificationSwitch.setChecked(sharedPreferences.getBoolean(NOTIFICATION_SWITCH_NAME, false));
 		criticalDepositEditText.setText(Float.toString(sharedPreferences.getFloat(CRITICAL_DEPOSIT_NAME, 0.0f)));
 		
-		sharedPreferencesEditor = sharedPreferences.edit();
 		
 		return rootView;
 	}
@@ -55,6 +57,9 @@ public class SettingsFragment extends Fragment implements OnCheckedChangeListene
 				criticalDepositEditText.setEnabled(false);		
 				getActivity().stopService(((MainActivity)getActivity()).service);
 			}
+			sharedPreferencesEditor
+				.putBoolean(NOTIFICATION_SWITCH_NAME, isChecked)
+				.apply();
 			break;
 		}	
 	}
@@ -75,12 +80,12 @@ public class SettingsFragment extends Fragment implements OnCheckedChangeListene
 						.putFloat(CRITICAL_DEPOSIT_NAME, newCriticalDepositValue)
 						.apply();
 				}
-				return true;
+				getActivity().getApplicationContext();
+				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow( v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
 			}
 			break;
 		}
-		return false;
-	}
-	
-	
+		return true;
+	}	
 }

@@ -16,7 +16,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 
 public class NotificationService extends Service{
@@ -35,7 +34,7 @@ public class NotificationService extends Service{
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
 			super(looper);
-			working = true;
+			working = false;
 		}
 		@Override
 		public void handleMessage(Message msg) {
@@ -43,22 +42,19 @@ public class NotificationService extends Service{
 			String login = bundle.getString(LOGIN_NAME);
 			String password = bundle.getString(PASSWORD_NAME);					
 			Double previousDeposit = -1.0;
-			UserInfoFragment userInfo = new UserInfoFragment();
-			userInfo
-				.setLogin(login)
-				.setPassword(password);
-			String sid = null;                                        			
 			while (working) {
 				synchronized (this) {         
 					Context context = getApplicationContext();
-					userInfo.setContext(context);
+					UserInfoFragment userInfo = new UserInfoFragment();
+					userInfo
+						.setLogin(login)
+						.setPassword(password)
+						.setContext(context);
 					try {                          
-						userInfo.update(sid);
+						userInfo.update();
 					} catch (Exception e) {                
 						e.printStackTrace();
 					} finally {
-						if ( userInfo == null ){                         
-						}
 						Double deposit = userInfo.getDeposit();            		
 						Intent notificationIntent = new Intent(getApplicationContext(), NotificationService.class);
 						PendingIntent contentIntent = PendingIntent.getActivity(context,
@@ -87,7 +83,7 @@ public class NotificationService extends Service{
 									notificationManager.notify(NOTIFY_ID, notification);
 								}
 								
-								// previousDeposit = deposit;
+								previousDeposit = deposit;
 							}
 						} else {
 							notificationManager.cancel(NOTIFY_ID);
@@ -128,7 +124,7 @@ public class NotificationService extends Service{
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 		Message msg = mServiceHandler.obtainMessage();
 		Bundle bundle = new Bundle();
 
@@ -142,7 +138,10 @@ public class NotificationService extends Service{
 			bundle.putString(PASSWORD_NAME, password);
 			//bundle.putInt(START_ID_NAME, startId);
 			msg.setData(bundle);
-			mServiceHandler.sendMessage(msg);
+			if ( !working ){
+				working = true;
+				mServiceHandler.sendMessage(msg);
+			}
 			return START_STICKY;
 		}
 	}

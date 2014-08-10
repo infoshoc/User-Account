@@ -19,6 +19,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Настройки</string>
+    <string name="action_update">Обновить</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="login_key_text_view">Логин:</string>
@@ -82,4 +83,8 @@
     
     <string name="loading_title">Подождите пожалуйста&#8230;</string>
     <string name="loading_message">Загрузка</string>
+    
+    <string name="logout_button">Выйти</string>
+    <string name="escape_button">Отмена</string>
+    <string name="logout_warning">Все данные программы и настройки будут стерты с вашего телефона</string>
 </resources>

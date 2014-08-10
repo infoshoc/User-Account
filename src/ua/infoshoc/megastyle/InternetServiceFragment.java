@@ -8,29 +8,21 @@ import java.security.cert.CertificateException;
 
 import org.htmlcleaner.TagNode;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class InternetServiceFragment extends Fragment{
+public class InternetServiceFragment extends DataDisplayFragment{
 	
 	/*cache*/
 	public static final String SHARED_PREFERENCES_NAME = "InternetServiceFragment";
 	private SharedPreferences.Editor sharedPreferencesEditor;
 	
 	/*for request*/
-	private static final String URL = "https://bills.megastyle.com:9443/index.cgi";
-	private static final String INDEX_NAME = "index";
 	private static final String INDEX_VALUE = "43";
-	private static final String SID_NAME = "sid";
 	
 
 	/*Positions in html code*/
@@ -57,106 +49,6 @@ public class InternetServiceFragment extends Fragment{
 	
 	private CharSequence values[];
 	private TextView textViews[];
-		
-	private Context context;
-
-	public void fill(){
-		for ( int i = 0; i < FIELDS_SIZE; ++i ){
-			if ( textViews[i] != null && values[i] != null ){
-				textViews[i].setText(values[i]);
-			}
-		}
-	}
-	
-	private String sid;
-	private String login;
-	private String password;
-	
-	class Update extends AsyncTask<Void, Integer, Void>{
-
-		protected void onPreExecute(){
-			((MainActivity)getActivity()).progressBar.setVisibility(View.VISIBLE);
-		}
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-			Request request = new Request(URL);
-			request.addParam(INDEX_NAME, INDEX_VALUE);
-			request.addParam(SID_NAME, sid);
-			request.addCookie(SID_NAME, sid);
-			TagNode result = null;
-			try {
-				result = request.send(getActivity().getResources());
-			} catch (KeyManagementException | CertificateException
-					| KeyStoreException | NoSuchAlgorithmException
-					| IOException e) {
-				e.printStackTrace();
-			}
-			
-			TagNode div = result.findElementByAttValue("class", "kabinet-center_col", true, true);
-			if ( div == null ){
-				try {
-					sid = LoginActivity.login(context, login, password);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					doInBackground(params);					
-				}
-			}else{
-				div = div.findElementByAttValue("id", "dv_user_info", true, true);
-				TagNode[] trs = div.getElementsByName("tr", true);
-				int trsLength = trs.length;				
-				for ( int trsIdx = 0; trsIdx < trsLength; ++trsIdx ){
-					TagNode[] tds = trs[trsIdx].getChildTags();
-					switch ( trsIdx ){
-					case SERVICE_NAME_TR_IDX:
-						values[SERVICE_NAME_IDX] = trs[trsIdx].getText();
-						break;
-					case TARIFF_TR_IDX:
-						values[TARIFF_IDX] = tds[1].getText(); 
-						break;
-					case SIMULTANEOUSLY_TR_IDX:
-						values[SIMULTANEOUSLY_IDX] = tds[1].getText();
-						break;
-					case IP_TR_IDX:
-						values[IP_IDX] = tds[1].getText();
-						break;
-					case NETMASK_TR_IDX:
-						values[NETMASK_IDX] = tds[1].getText();
-						break;
-					case SPEED_TR_IDX:
-						values[SPEED_IDX] = tds[1].getText();
-						break;
-					case CID_TR_IDX:
-						values[CID_IDX] = tds[1].getText();
-						break;
-					case SERVICE_STATUS_TR_IDX:
-						values[SERVICE_STATUS_IDX] = tds[1].getText();
-						break;
-					case FINISH_TR_IDX:
-						values[FINISH_IDX] = tds[1].getText();
-						break;
-					}
-				}
-			}
-			return null;
-		}
-		
-		protected void onPostExecute (Void v){
-			fill();
-			
-			for (int fieldIdx = 0; fieldIdx < FIELDS_SIZE; fieldIdx++) {
-				sharedPreferencesEditor.putString(Integer.toString(fieldIdx), values[fieldIdx].toString());
-			}
-			sharedPreferencesEditor.commit();
-
-			MainActivity mainActivity = (MainActivity)getActivity();
-			if ( mainActivity != null ){
-				mainActivity.progressBar.setVisibility(View.INVISIBLE);
-			}
-			cancel(false);
-		}
-	}
 	
 	public InternetServiceFragment(){
 		textViews = new TextView[FIELDS_SIZE];
@@ -165,17 +57,7 @@ public class InternetServiceFragment extends Fragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-		FragmentActivity fragmentActivity = getActivity();
-		context = fragmentActivity.getApplicationContext();
-		Intent intent = fragmentActivity.getIntent();
-		sid = intent.getStringExtra(LoginActivity.SID_NAME);
-		login = intent.getStringExtra(LoginActivity.LOGIN_NAME);
-		password = intent.getStringExtra(LoginActivity.PASSWORD_NAME);
-		
-		/*Request new data*/
-		new Update().execute();		
-		
+		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(R.layout.fragment_internet_service, container, false);
 		
 		/*Set TextViews*/
@@ -188,20 +70,90 @@ public class InternetServiceFragment extends Fragment{
 		textViews[CID_IDX] = (TextView) rootView.findViewById(R.id.cidTextView);
 		textViews[SERVICE_STATUS_IDX] = (TextView) rootView.findViewById(R.id.serviceStatusTextView);
 		textViews[FINISH_IDX] = (TextView) rootView.findViewById(R.id.finishTextView);
-		fill();
-		
-		/*Set Cached Date*/
-		SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		sharedPreferencesEditor = sharedPreferences.edit();
+		flush();
+				
+		return rootView;
+	}
+
+	@Override
+	public DataDisplayFragment update() throws KeyManagementException,
+			CertificateException, KeyStoreException, NoSuchAlgorithmException,
+			IOException {
+		TagNode div = update(null);
+		div = div.findElementByAttValue("id", "dv_user_info", true, true);
+		TagNode[] trs = div.getElementsByName("tr", true);
+		int trsLength = trs.length;				
+		for ( int trsIdx = 0; trsIdx < trsLength; ++trsIdx ){
+			TagNode[] tds = trs[trsIdx].getChildTags();
+			switch ( trsIdx ){
+			case SERVICE_NAME_TR_IDX:
+				values[SERVICE_NAME_IDX] = trs[trsIdx].getText();
+				break;
+			case TARIFF_TR_IDX:
+				values[TARIFF_IDX] = tds[1].getText(); 
+				break;
+			case SIMULTANEOUSLY_TR_IDX:
+				values[SIMULTANEOUSLY_IDX] = tds[1].getText();
+				break;
+			case IP_TR_IDX:
+				values[IP_IDX] = tds[1].getText();
+				break;
+			case NETMASK_TR_IDX:
+				values[NETMASK_IDX] = tds[1].getText();
+				break;
+			case SPEED_TR_IDX:
+				values[SPEED_IDX] = tds[1].getText();
+				break;
+			case CID_TR_IDX:
+				values[CID_IDX] = tds[1].getText();
+				break;
+			case SERVICE_STATUS_TR_IDX:
+				values[SERVICE_STATUS_IDX] = tds[1].getText();
+				break;
+			case FINISH_TR_IDX:
+				values[FINISH_IDX] = tds[1].getText();
+				break;
+			}
+		}
+		return this;
+	}
+
+	@Override
+	protected DataDisplayFragment saveCache() {
+		for (Integer i = 0; i < FIELDS_SIZE; i++) {
+			sharedPreferencesEditor.putString(i.toString(), values[i].toString());
+		}
+		sharedPreferencesEditor.apply();
+		return this;
+	}
+
+	@Override
+	protected DataDisplayFragment getCache() {
 		for (int fieldId = 0; fieldId < FIELDS_SIZE; ++fieldId){
 			if ( values[fieldId] == null ){
 				values[fieldId] = sharedPreferences.getString(Integer.toString(fieldId), null);
 			}
 		}
-		fill();
-		
-		return rootView;
+		return this;
 	}
-	
-	
+
+	@Override
+	protected DataDisplayFragment flush(){
+		for ( int i = 0; i < FIELDS_SIZE; ++i ){
+			if ( textViews[i] != null && values[i] != null ){
+				textViews[i].setText(values[i]);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	protected String getIndexValue() {
+		return INDEX_VALUE;
+	}
+
+	@Override
+	protected String getSharedPreferencesName() {
+		return SHARED_PREFERENCES_NAME;
+	}
 }
