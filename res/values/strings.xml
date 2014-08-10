@@ -80,6 +80,6 @@
     <string name="support_phone_number_3">+38 04 7254 4011</string>
     <string name="logout_button">Exit</string>
     <string name="escape_button">Escape</string>
-    <string name="logout_warning">All your data and settings will be erased from your phone</string>
+    <string name="logout_warning">All program\'s data and settings will be erased from the device</string>
 
 </resources>

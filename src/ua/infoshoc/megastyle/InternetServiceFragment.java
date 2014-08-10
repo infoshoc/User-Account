@@ -19,7 +19,6 @@ public class InternetServiceFragment extends DataDisplayFragment{
 	
 	/*cache*/
 	public static final String SHARED_PREFERENCES_NAME = "InternetServiceFragment";
-	private SharedPreferences.Editor sharedPreferencesEditor;
 	
 	/*for request*/
 	private static final String INDEX_VALUE = "43";

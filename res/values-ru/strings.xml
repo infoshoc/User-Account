@@ -86,5 +86,5 @@
     
     <string name="logout_button">Выйти</string>
     <string name="escape_button">Отмена</string>
-    <string name="logout_warning">Все данные программы и настройки будут стерты с вашего телефона</string>
+    <string name="logout_warning">Все данные программы и настройки будут стерты с устройства</string>
 </resources>

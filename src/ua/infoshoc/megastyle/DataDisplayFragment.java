@@ -57,7 +57,7 @@ public abstract class DataDisplayFragment extends Fragment {
 		if ( result == null ){
 			try {
 				sid = LoginActivity.login(getContext(), login, password);
-				update(params);
+				result = update(params);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();

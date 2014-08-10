@@ -87,8 +87,6 @@ public class MainActivity extends ActionBarActivity implements
 	private static final int SECTION_NUMBER_LOGOUT = 4;
 	
 	
-	private AlertDialog.Builder alertDialogBuilder;
-	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		isSettings = false;
@@ -134,37 +132,39 @@ public class MainActivity extends ActionBarActivity implements
 						).commit();
 			break;
 		case SECTION_NUMBER_LOGOUT:
-			if ( alertDialogBuilder == null ) {
-				alertDialogBuilder = 
-					new AlertDialog.Builder(getApplicationContext())
-					.setTitle(R.string.title_logout)
-					.setPositiveButton(R.string.logout_button, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							String sharedPreferncesNames[] = {
-									LoginActivity.SHARED_PREFERENCES_NAME,
-									UserInfoFragment.SHARED_PREFERENCES_NAME,
-									InternetServiceFragment.SHARED_PREFERENCES_NAME,
-									PaymentsFragment.SHARED_PREFERENCES_NAME,
-									StatisticsFragment.SHARED_PREFERENCES_NAME,
-									WithdrawalFragment.SHARED_PREFERENCES_NAME
-							};
-							
-							for (int i = 0; i < sharedPreferncesNames.length; i++) {
-								getSharedPreferences(sharedPreferncesNames[i], 0).edit().clear().apply();
-							}
-							
-							stopService(service);
-							
-							Intent intent = new Intent ( getApplicationContext(), LoginActivity.class );	
-							startActivity(intent);							
+			new AlertDialog.Builder(this)
+				.setTitle(R.string.title_logout)
+				.setPositiveButton(R.string.logout_button, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String sharedPreferncesNames[] = {
+								LoginActivity.SHARED_PREFERENCES_NAME,
+								UserInfoFragment.SHARED_PREFERENCES_NAME,
+								InternetServiceFragment.SHARED_PREFERENCES_NAME,
+								PaymentsFragment.SHARED_PREFERENCES_NAME,
+								SettingsFragment.SHARED_PREFERENCES_NAME,
+								StatisticsFragment.SHARED_PREFERENCES_NAME,
+								WithdrawalFragment.SHARED_PREFERENCES_NAME
+						};
+						
+						for (int i = 0; i < sharedPreferncesNames.length; i++) {
+							getSharedPreferences(sharedPreferncesNames[i], 0).edit().clear().apply();
 						}
-					})
-					.setNegativeButton(R.string.escape_button, null)
-					.setMessage(R.string.logout_warning);
-			}
-			
-			alertDialogBuilder.show();
+						
+						stopService(service);
+						
+						Intent intent = new Intent ( getApplicationContext(), LoginActivity.class );	
+						startActivity(intent);							
+					}
+				})
+				.setNegativeButton(R.string.escape_button, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub						
+					}
+				})
+				.setMessage(R.string.logout_warning)
+				.show();
 			
 			break;
 		}		
