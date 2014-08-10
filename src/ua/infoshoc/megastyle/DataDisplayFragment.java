@@ -14,10 +14,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public abstract class DataDisplayFragment extends Fragment {
@@ -51,7 +52,6 @@ public abstract class DataDisplayFragment extends Fragment {
 			.addParam(SID_KEY, sid)
 			.addParam(INDEX_NAME, getIndexValue())
 			.addCookie(SID_NAME, sid);
-		Log.d("DEBUG", getIndexValue() );
 		TagNode root = request.send(getContext().getResources());
 		TagNode result = root.findElementByAttValue("class", "kabinet-center_col", true, true);
 		if ( result == null ){
@@ -130,5 +130,27 @@ public abstract class DataDisplayFragment extends Fragment {
 			cancel(false);
 		}
 	}
+		
+	protected TextView makeTextView(String text, Boolean isPadding){
+		TextView result = new TextView(getContext());
+		result.setText(text);
+		if ( isPadding ){
+			result.setPadding(0, 0, Math.round(getContext().getResources().getDimension(R.dimen.textview_right_padding)), 0);
+		}
+		result.setGravity(Gravity.CENTER);
+		result.setTextColor(getContext().getResources().getColor(R.color.default_text_color));
+		return result;
+		
+	}	
+	protected TextView makeTextView(int textId, Boolean isPadding){
+		return makeTextView ( getContext().getString(textId), isPadding );
+	}	
+
+	protected TextView makeTextView(int textId){
+		return makeTextView(textId, true);
+	}
 	
+	protected TextView makeTextView(String text){
+		return makeTextView(text, true);
+	}
 }

@@ -8,7 +8,6 @@ import java.security.cert.CertificateException;
 
 import org.htmlcleaner.TagNode;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,32 +127,12 @@ public class WithdrawalFragment extends DataDisplayFragment {
 			tableLayout.removeAllViews();
 			
 			/*Add headers*/
-			TextView dateTextView = new TextView(context);
-			dateTextView.setText(R.string.date_header_text_view);
-			//dateTextView.setTextColor(android.R.attr.textColor);
-			dateTextView.setPadding(0, 0, 10, 0);
-			TextView descriptionTextView = new TextView(context);
-			descriptionTextView.setText(R.string.description_header_text_view);
-			//descriptionTextView.setTextColor(android.R.attr.textColor);
-			descriptionTextView.setPadding(0, 0, 10, 0);
-			TextView sumHeaderTextView = new TextView(context);
-			sumHeaderTextView.setText(R.string.sum_header_text_view);
-			//sumHeaderTextView.setTextColor(android.R.attr.textColor);
-			sumHeaderTextView.setPadding(0, 0, 10, 0);
-			TextView depositTextView = new TextView(context);
-			depositTextView.setText(R.string.deposit_header_text_view);
-			//depositTextView.setTextColor(android.R.attr.textColor);
-			depositTextView.setPadding(0, 0, 10, 0);
-			TextView typeTextView = new TextView(context);
-			typeTextView.setText(R.string.type_header_text_view);
-			//typeTextView.setTextColor(android.R.attr.textColor);
-			typeTextView.setPadding(0, 0, 10, 0);
 			TableRow tableHeaderRow = new TableRow(context);
-			tableHeaderRow.addView(dateTextView);
-			tableHeaderRow.addView(descriptionTextView);
-			tableHeaderRow.addView(sumHeaderTextView);
-			tableHeaderRow.addView(depositTextView);
-			tableHeaderRow.addView(typeTextView);
+			tableHeaderRow.addView(makeTextView(R.string.date_header_text_view));
+			tableHeaderRow.addView(makeTextView(R.string.description_header_text_view));
+			tableHeaderRow.addView(makeTextView(R.string.sum_header_text_view));
+			tableHeaderRow.addView(makeTextView(R.string.deposit_header_text_view));
+			tableHeaderRow.addView(makeTextView(R.string.type_header_text_view, false));
 			tableLayout.addView(tableHeaderRow);
 			
 			/*Add table*/
@@ -161,11 +140,9 @@ public class WithdrawalFragment extends DataDisplayFragment {
 			for ( int row = 0; row < tableLength; ++row ){
 				TableRow tableRow = new TableRow(context);
 				for (int col = 0; col < COLUMNS_NUMBER; col++) {
-					TextView textView = new TextView(context);
-					//textView.setTextColor(android.R.attr.textColor);
-					textView.setText(table[row][col]);
-					textView.setPadding(0, 0, 10, 0);
-					tableRow.addView(textView);
+					if ( table[row][col] != null ){
+						tableRow.addView(makeTextView(table[row][col], col+1 != COLUMNS_NUMBER));
+					}
 				}			
 				tableLayout.addView(tableRow);
 			}

@@ -203,12 +203,9 @@ public class StatisticsFragment extends DataDisplayFragment implements OnTouchLi
 			for (int row = 0; row < tableSize; row++) {
 				TableRow tableRow = new TableRow(context);
 				for (int col = 0; col < COLUMNS_NUMBER; col++) {
-					TextView textView = new TextView(context);
 					if ( table[row][col] != null ){
-						textView.setText(table[row][col]);
+						tableRow.addView(makeTextView(table[row][col], col+1 != COLUMNS_NUMBER));
 					}
-					textView.setPadding(0, 0, 10, 0);			
-					tableRow.addView(textView);
 				}
 				tableLayout.addView(tableRow);
 			}
