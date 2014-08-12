@@ -15,14 +15,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class UserInfoFragment extends DataDisplayFragment {
-	
-	/*cache*/
+
+	/* cache */
 	public static final String SHARED_PREFERENCES_NAME = "UserInfoFragmentCache";
-	
-	/*for request*/
+
+	/* for request */
 	private static final String INDEX_VALUE = "10";
 
-	/*Positions in html code*/
+	/* Positions in html code */
 	private static final int LOGIN_TR_IDX = 0;
 	private static final int DEPOSIT_TR_IDX = 1;
 	private static final int ADDITIONAL_DEPOSIT_TR_IDX = 2;
@@ -43,9 +43,9 @@ public class UserInfoFragment extends DataDisplayFragment {
 	private static final int SPEED_TR_IDX = 5;
 	private static final int CID_TR_IDX = 6;
 	private static final int SERVICE_STATUS_TR_IDX = 7;
-	private static final int FINISH_TR_IDX= 8;	
+	private static final int FINISH_TR_IDX = 8;
 
-	/*Positions in array*/
+	/* Positions in array */
 	private static final int LOGIN_IDX = 0;
 	private static final int DEPOSIT_IDX = 1;
 	private static final int ADDITIONAL_DEPOSIT_IDX = 2;
@@ -70,75 +70,100 @@ public class UserInfoFragment extends DataDisplayFragment {
 	private static final int SERVICE_STATUS_IDX = 21;
 	private static final int FINISH_IDX = 22;
 	private static final int FIELDS_SIZE = 23;
-	
-	/*Storing data*/
+
+	/* Storing data */
 	private CharSequence values[];
 	private TextView textViews[];
-			
-	/*Constructors*/
-	public UserInfoFragment(){
+
+	/* Constructors */
+	public UserInfoFragment() {
 		textViews = new TextView[FIELDS_SIZE];
-		values = new CharSequence[FIELDS_SIZE];		
+		values = new CharSequence[FIELDS_SIZE];
 	}
 
-	/*get fields*/
-	public Double getDeposit(){                              		
+	/* get fields */
+	public Double getDeposit() {
 		return Double.parseDouble(values[DEPOSIT_IDX].toString());
 	}
-			
+
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-			
-		View rootView = inflater.inflate(R.layout.fragment_user_info, container, false);
-		
-		/*Set TextViews*/
-		textViews[LOGIN_IDX] = (TextView) rootView.findViewById(R.id.loginTextView);
-		textViews[DEPOSIT_IDX] = (TextView) rootView.findViewById(R.id.depositTextView);
-		textViews[ADDITIONAL_DEPOSIT_IDX] = (TextView) rootView.findViewById(R.id.additionalDepositTextView);
-		textViews[CREDIT_IDX] = (TextView) rootView.findViewById(R.id.creditTextView);
-		textViews[CREDIT_DATE_IDX] = (TextView) rootView.findViewById(R.id.creditDateTextView);
-		textViews[DISCOUNT_IDX] = (TextView) rootView.findViewById(R.id.discountTextView);
-		textViews[DISCOUNT_DATE_IDX] = (TextView) rootView.findViewById(R.id.discountDateTextView);
-		textViews[NAME_IDX] = (TextView) rootView.findViewById(R.id.nameTextView);
-		textViews[PHONE_IDX] = (TextView) rootView.findViewById(R.id.phoneTextView);
-		textViews[ADDRESS_IDX] = (TextView) rootView.findViewById(R.id.addressTextView);
-		textViews[EMAIL_IDX] = (TextView) rootView.findViewById(R.id.emailTextView);
-		textViews[CONTRACT_IDX] = (TextView) rootView.findViewById(R.id.contractTextView);
-		textViews[CONTRACT_DATE_IDX] = (TextView) rootView.findViewById(R.id.contractDateTextView);
-		textViews[STATUS_IDX] = (TextView) rootView.findViewById(R.id.statusTextView);
-		textViews[SERVICE_NAME_IDX] = (TextView) rootView.findViewById(R.id.serviceNameTextView);
-		textViews[TARIFF_IDX] = (TextView) rootView.findViewById(R.id.tariffTextView);
-		textViews[SIMULTANEOUSLY_IDX] = (TextView) rootView.findViewById(R.id.simultaneouslyTextView);
+
+		View rootView = inflater.inflate(R.layout.fragment_user_info,
+				container, false);
+
+		/* Set TextViews */
+		textViews[LOGIN_IDX] = (TextView) rootView
+				.findViewById(R.id.loginTextView);
+		textViews[DEPOSIT_IDX] = (TextView) rootView
+				.findViewById(R.id.depositTextView);
+		textViews[ADDITIONAL_DEPOSIT_IDX] = (TextView) rootView
+				.findViewById(R.id.additionalDepositTextView);
+		textViews[CREDIT_IDX] = (TextView) rootView
+				.findViewById(R.id.creditTextView);
+		textViews[CREDIT_DATE_IDX] = (TextView) rootView
+				.findViewById(R.id.creditDateTextView);
+		textViews[DISCOUNT_IDX] = (TextView) rootView
+				.findViewById(R.id.discountTextView);
+		textViews[DISCOUNT_DATE_IDX] = (TextView) rootView
+				.findViewById(R.id.discountDateTextView);
+		textViews[NAME_IDX] = (TextView) rootView
+				.findViewById(R.id.nameTextView);
+		textViews[PHONE_IDX] = (TextView) rootView
+				.findViewById(R.id.phoneTextView);
+		textViews[ADDRESS_IDX] = (TextView) rootView
+				.findViewById(R.id.addressTextView);
+		textViews[EMAIL_IDX] = (TextView) rootView
+				.findViewById(R.id.emailTextView);
+		textViews[CONTRACT_IDX] = (TextView) rootView
+				.findViewById(R.id.contractTextView);
+		textViews[CONTRACT_DATE_IDX] = (TextView) rootView
+				.findViewById(R.id.contractDateTextView);
+		textViews[STATUS_IDX] = (TextView) rootView
+				.findViewById(R.id.statusTextView);
+		textViews[SERVICE_NAME_IDX] = (TextView) rootView
+				.findViewById(R.id.serviceNameTextView);
+		textViews[TARIFF_IDX] = (TextView) rootView
+				.findViewById(R.id.tariffTextView);
+		textViews[SIMULTANEOUSLY_IDX] = (TextView) rootView
+				.findViewById(R.id.simultaneouslyTextView);
 		textViews[IP_IDX] = (TextView) rootView.findViewById(R.id.ipTextView);
-		textViews[NETMASK_IDX] = (TextView) rootView.findViewById(R.id.netmaskTextView);
-		textViews[SPEED_IDX] = (TextView) rootView.findViewById(R.id.speedTextView);
+		textViews[NETMASK_IDX] = (TextView) rootView
+				.findViewById(R.id.netmaskTextView);
+		textViews[SPEED_IDX] = (TextView) rootView
+				.findViewById(R.id.speedTextView);
 		textViews[CID_IDX] = (TextView) rootView.findViewById(R.id.cidTextView);
-		textViews[SERVICE_STATUS_IDX] = (TextView) rootView.findViewById(R.id.serviceStatusTextView);
-		textViews[FINISH_IDX] = (TextView) rootView.findViewById(R.id.finishTextView);
+		textViews[SERVICE_STATUS_IDX] = (TextView) rootView
+				.findViewById(R.id.serviceStatusTextView);
+		textViews[FINISH_IDX] = (TextView) rootView
+				.findViewById(R.id.finishTextView);
 		flush();
-		
-		/*Set Cached Date*/
+
+		/* Set Cached Date */
 		getCache();
 		flush();
-		
+
 		return rootView;
 	}
-		
+
 	@Override
-	public UserInfoFragment update() throws KeyManagementException, CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException {
+	public UserInfoFragment update() throws KeyManagementException,
+			CertificateException, KeyStoreException, NoSuchAlgorithmException,
+			IOException {
 		TagNode div = update(null);
-		TagNode[] tables = div.getChildTags()[0].getChildTags(); 
+		TagNode[] tables = div.getChildTags()[0].getChildTags();
 		TagNode table = tables[0];
 		TagNode[] trs = table.getChildTags()[0].getChildTags();
 		int trsLength = trs.length;
-		for ( int trsIdx = 0; trsIdx < trsLength; ++trsIdx ){
+		for (int trsIdx = 0; trsIdx < trsLength; ++trsIdx) {
 			TagNode[] tds = trs[trsIdx].getChildTags();
-			switch(trsIdx){
+			switch (trsIdx) {
 			case LOGIN_TR_IDX:
 				values[LOGIN_IDX] = tds[1].getText();
 				break;
@@ -154,14 +179,16 @@ public class UserInfoFragment extends DataDisplayFragment {
 				values[CREDIT_IDX] = tds[1].getText();
 				String creditDate = tds[0].getText().toString();
 				int creditDateLength = creditDate.length();
-				values[CREDIT_DATE_IDX] = creditDate.substring(creditDateLength-10, creditDateLength);						
+				values[CREDIT_DATE_IDX] = creditDate.substring(
+						creditDateLength - 10, creditDateLength);
 				break;
 			case DISCOUNT_TR_IDX:
 				String discount = tds[1].getText().toString();
 				int percentIdx = discount.indexOf('%');
-				values[DISCOUNT_IDX] = discount.substring(0, percentIdx+1);
+				values[DISCOUNT_IDX] = discount.substring(0, percentIdx + 1);
 				int discountLength = discount.length();
-				values[DISCOUNT_DATE_IDX] = discount.substring(discountLength-10, discountLength);
+				values[DISCOUNT_DATE_IDX] = discount.substring(
+						discountLength - 10, discountLength);
 				break;
 			case NAME_TR_IDX:
 				values[NAME_IDX] = tds[1].getText().toString();
@@ -181,26 +208,26 @@ public class UserInfoFragment extends DataDisplayFragment {
 				values[CONTRACT_IDX] = contract.substring(0, spaceIdx);
 				break;
 			case CONTRACT_DATE_TR_IDX:
-				values[CONTRACT_DATE_IDX] = tds[1].getText().toString(); 
+				values[CONTRACT_DATE_IDX] = tds[1].getText().toString();
 				break;
 			case STATUS_TR_IDX:
 				values[STATUS_IDX] = tds[1].getText().toString();
 				break;
-			}	
+			}
 		}
 
-		tables = div.getChildTags(); 
+		tables = div.getChildTags();
 		table = tables[1].getElementsByName("table", true)[0];
 		trs = table.getElementsByName("tr", true);
-		trsLength = trs.length;				
-		for ( int trsIdx = 0; trsIdx < trsLength; ++trsIdx ){
+		trsLength = trs.length;
+		for (int trsIdx = 0; trsIdx < trsLength; ++trsIdx) {
 			TagNode[] tds = trs[trsIdx].getChildTags();
-			switch ( trsIdx ){
+			switch (trsIdx) {
 			case SERVICE_NAME_TR_IDX:
 				values[SERVICE_NAME_IDX] = trs[trsIdx].getText();
 				break;
 			case TARIFF_TR_IDX:
-				values[TARIFF_IDX] = tds[1].getText(); 
+				values[TARIFF_IDX] = tds[1].getText();
 				break;
 			case SIMULTANEOUSLY_TR_IDX:
 				values[SIMULTANEOUSLY_IDX] = tds[1].getText();
@@ -229,19 +256,20 @@ public class UserInfoFragment extends DataDisplayFragment {
 	}
 
 	@Override
-	protected UserInfoFragment getCache(){
+	protected UserInfoFragment getCache() {
 		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			if ( values[i] == null ){
+			if (values[i] == null) {
 				values[i] = sharedPreferences.getString(i.toString(), null);
 			}
 		}
-		return this;		
+		return this;
 	}
-	
+
 	@Override
 	protected UserInfoFragment saveCache() {
 		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-				sharedPreferencesEditor.putString(i.toString(), values[i].toString());
+			sharedPreferencesEditor.putString(i.toString(),
+					values[i].toString());
 		}
 		sharedPreferencesEditor.apply();
 		return this;
@@ -249,8 +277,8 @@ public class UserInfoFragment extends DataDisplayFragment {
 
 	@Override
 	protected UserInfoFragment flush() {
-		for ( int i = 0; i < FIELDS_SIZE; ++i ){
-			if ( textViews[i] != null && values[i] != null ){
+		for (int i = 0; i < FIELDS_SIZE; ++i) {
+			if (textViews[i] != null && values[i] != null) {
 				textViews[i].setText(values[i]);
 			}
 		}

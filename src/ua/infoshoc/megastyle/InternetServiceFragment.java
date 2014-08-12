@@ -14,16 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class InternetServiceFragment extends DataDisplayFragment{
-	
-	/*cache*/
-	public static final String SHARED_PREFERENCES_NAME = "InternetServiceFragment";
-	
-	/*for request*/
-	private static final String INDEX_VALUE = "43";
-	
+public class InternetServiceFragment extends DataDisplayFragment {
 
-	/*Positions in html code*/
+	/* cache */
+	public static final String SHARED_PREFERENCES_NAME = "InternetServiceFragment";
+
+	/* for request */
+	private static final String INDEX_VALUE = "43";
+
+	/* Positions in html code */
 	private static final int SERVICE_NAME_TR_IDX = 0;
 	private static final int TARIFF_TR_IDX = 1;
 	private static final int SIMULTANEOUSLY_TR_IDX = 2;
@@ -32,7 +31,7 @@ public class InternetServiceFragment extends DataDisplayFragment{
 	private static final int SPEED_TR_IDX = 5;
 	private static final int CID_TR_IDX = 6;
 	private static final int SERVICE_STATUS_TR_IDX = 7;
-	private static final int FINISH_TR_IDX= 8;	
+	private static final int FINISH_TR_IDX = 8;
 
 	private static final int SERVICE_NAME_IDX = 0;
 	private static final int TARIFF_IDX = 1;
@@ -44,32 +43,41 @@ public class InternetServiceFragment extends DataDisplayFragment{
 	private static final int SERVICE_STATUS_IDX = 7;
 	private static final int FINISH_IDX = 8;
 	private static final int FIELDS_SIZE = 9;
-	
+
 	private CharSequence values[];
 	private TextView textViews[];
-	
-	public InternetServiceFragment(){
+
+	public InternetServiceFragment() {
 		textViews = new TextView[FIELDS_SIZE];
 		values = new CharSequence[FIELDS_SIZE];
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View rootView = inflater.inflate(R.layout.fragment_internet_service, container, false);
-		
-		/*Set TextViews*/
-		textViews[SERVICE_NAME_IDX] = (TextView) rootView.findViewById(R.id.serviceNameTextView);
-		textViews[TARIFF_IDX] = (TextView) rootView.findViewById(R.id.tariffTextView);
-		textViews[SIMULTANEOUSLY_IDX] = (TextView) rootView.findViewById(R.id.simultaneouslyTextView);
+		View rootView = inflater.inflate(R.layout.fragment_internet_service,
+				container, false);
+
+		/* Set TextViews */
+		textViews[SERVICE_NAME_IDX] = (TextView) rootView
+				.findViewById(R.id.serviceNameTextView);
+		textViews[TARIFF_IDX] = (TextView) rootView
+				.findViewById(R.id.tariffTextView);
+		textViews[SIMULTANEOUSLY_IDX] = (TextView) rootView
+				.findViewById(R.id.simultaneouslyTextView);
 		textViews[IP_IDX] = (TextView) rootView.findViewById(R.id.ipTextView);
-		textViews[NETMASK_IDX] = (TextView) rootView.findViewById(R.id.netmaskTextView);
-		textViews[SPEED_IDX] = (TextView) rootView.findViewById(R.id.speedTextView);
+		textViews[NETMASK_IDX] = (TextView) rootView
+				.findViewById(R.id.netmaskTextView);
+		textViews[SPEED_IDX] = (TextView) rootView
+				.findViewById(R.id.speedTextView);
 		textViews[CID_IDX] = (TextView) rootView.findViewById(R.id.cidTextView);
-		textViews[SERVICE_STATUS_IDX] = (TextView) rootView.findViewById(R.id.serviceStatusTextView);
-		textViews[FINISH_IDX] = (TextView) rootView.findViewById(R.id.finishTextView);
+		textViews[SERVICE_STATUS_IDX] = (TextView) rootView
+				.findViewById(R.id.serviceStatusTextView);
+		textViews[FINISH_IDX] = (TextView) rootView
+				.findViewById(R.id.finishTextView);
 		flush();
-				
+
 		return rootView;
 	}
 
@@ -80,15 +88,15 @@ public class InternetServiceFragment extends DataDisplayFragment{
 		TagNode div = update(null);
 		div = div.findElementByAttValue("id", "dv_user_info", true, true);
 		TagNode[] trs = div.getElementsByName("tr", true);
-		int trsLength = trs.length;				
-		for ( int trsIdx = 0; trsIdx < trsLength; ++trsIdx ){
+		int trsLength = trs.length;
+		for (int trsIdx = 0; trsIdx < trsLength; ++trsIdx) {
 			TagNode[] tds = trs[trsIdx].getChildTags();
-			switch ( trsIdx ){
+			switch (trsIdx) {
 			case SERVICE_NAME_TR_IDX:
 				values[SERVICE_NAME_IDX] = trs[trsIdx].getText();
 				break;
 			case TARIFF_TR_IDX:
-				values[TARIFF_IDX] = tds[1].getText(); 
+				values[TARIFF_IDX] = tds[1].getText();
 				break;
 			case SIMULTANEOUSLY_TR_IDX:
 				values[SIMULTANEOUSLY_IDX] = tds[1].getText();
@@ -119,7 +127,8 @@ public class InternetServiceFragment extends DataDisplayFragment{
 	@Override
 	protected DataDisplayFragment saveCache() {
 		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			sharedPreferencesEditor.putString(i.toString(), values[i].toString());
+			sharedPreferencesEditor.putString(i.toString(),
+					values[i].toString());
 		}
 		sharedPreferencesEditor.apply();
 		return this;
@@ -127,18 +136,19 @@ public class InternetServiceFragment extends DataDisplayFragment{
 
 	@Override
 	protected DataDisplayFragment getCache() {
-		for (int fieldId = 0; fieldId < FIELDS_SIZE; ++fieldId){
-			if ( values[fieldId] == null ){
-				values[fieldId] = sharedPreferences.getString(Integer.toString(fieldId), null);
+		for (int fieldId = 0; fieldId < FIELDS_SIZE; ++fieldId) {
+			if (values[fieldId] == null) {
+				values[fieldId] = sharedPreferences.getString(
+						Integer.toString(fieldId), null);
 			}
 		}
 		return this;
 	}
 
 	@Override
-	protected DataDisplayFragment flush(){
-		for ( int i = 0; i < FIELDS_SIZE; ++i ){
-			if ( textViews[i] != null && values[i] != null ){
+	protected DataDisplayFragment flush() {
+		for (int i = 0; i < FIELDS_SIZE; ++i) {
+			if (textViews[i] != null && values[i] != null) {
 				textViews[i].setText(values[i]);
 			}
 		}
