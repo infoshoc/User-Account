@@ -81,5 +81,6 @@
     <string name="logout_button">Exit</string>
     <string name="escape_button">Escape</string>
     <string name="logout_warning">All program\'s data and settings will be erased from the device</string>
+    <string name="login_error">Can not login</string>
 
 </resources>

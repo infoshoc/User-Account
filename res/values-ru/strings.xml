@@ -87,4 +87,7 @@
     <string name="logout_button">Выйти</string>
     <string name="escape_button">Отмена</string>
     <string name="logout_warning">Все данные программы и настройки будут стерты с устройства</string>
+    
+    <string name="login_error">Неудается войти</string>
+    
 </resources>

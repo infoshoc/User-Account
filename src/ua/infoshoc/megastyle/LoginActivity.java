@@ -69,15 +69,16 @@ public class LoginActivity extends Activity implements OnClickListener,
 		@Override
 		protected String doInBackground(String... params) {
 			String sid = null;
+			
 			try {
 				sid = login(getApplicationContext(), params[0], params[1]);
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), e.getMessage(),
-						Toast.LENGTH_LONG).show();
 				e.printStackTrace();
-			} finally {
-				sharedPreferencesEditor.putString(LOGIN_KEY, params[0])
-						.putString(PASSWORD_KEY, params[1]).apply();
+			}
+			if ( sid != null ){
+				sharedPreferencesEditor
+					.putString(LOGIN_KEY, params[0])
+					.putString(PASSWORD_KEY, params[1]).apply();
 			}
 			return sid;
 		}
@@ -92,8 +93,11 @@ public class LoginActivity extends Activity implements OnClickListener,
 				intent.putExtra(LoginActivity.PASSWORD_NAME, password);
 				startActivity(intent);
 				cancel(false);
+			} else {
+				progressDialog.cancel();
+				loginButton.setEnabled(true);
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_error), Toast.LENGTH_LONG).show();				
 			}
-			loginButton.setEnabled(true);
 		}
 	}
 
@@ -130,7 +134,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 	private String user;
 	private String password;
 
-	ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 
 	@Override
 	public void onClick(View view) {
