@@ -268,8 +268,10 @@ public class UserInfoFragment extends DataDisplayFragment {
 	@Override
 	protected UserInfoFragment saveCache() {
 		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			sharedPreferencesEditor.putString(i.toString(),
-					values[i].toString());
+			if ( values[i] != null ){
+				sharedPreferencesEditor.putString(i.toString(),
+						values[i].toString());
+			}
 		}
 		sharedPreferencesEditor.apply();
 		return this;

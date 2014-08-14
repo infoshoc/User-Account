@@ -85,7 +85,7 @@ public abstract class DataDisplayFragment extends Fragment {
 				e.printStackTrace();
 				Toast.makeText(getContext(), e.getLocalizedMessage(),
 						Toast.LENGTH_LONG).show();
-				// Think what to do here
+				updateAsyncTask.cancel(true);
 			}
 		}
 		return result;
@@ -133,22 +133,12 @@ public abstract class DataDisplayFragment extends Fragment {
 		updateAsyncTask.cancel(true);
 		super.onStop();
 	}
-
-	private boolean isNetworkConnected() {
-		ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-		return networkInfo != null;
-	} 
 	
 	private class Update extends AsyncTask<Void, Integer, Void> {
 		protected void onPreExecute() {
-			if ( !isNetworkConnected() ){
-				cancel(true);
-			}else{
-				MainActivity mainActivity = (MainActivity) getActivity();
-				if (mainActivity != null) {
-					mainActivity.setStartedUpdate();
-				}
+			MainActivity mainActivity = (MainActivity) getActivity();
+			if (mainActivity != null) {
+				mainActivity.setStartedUpdate();
 			}
 		}
 
