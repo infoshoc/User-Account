@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class NotificationAlarm extends BroadcastReceiver {
-	private static final long INTERVAL = 15*1000;//AlarmManager.INTERVAL_HALF_HOUR;
+	private static final long INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
 	private static final int NOTIFY_ID = 101;
 
 	private static AlarmManager alarmManager;
@@ -60,33 +60,32 @@ public class NotificationAlarm extends BroadcastReceiver {
 				userInfo.update();
 			}catch(Exception e){
 				e.printStackTrace();
+				working = false;
 				return;
-			}finally{
-				Double deposit = userInfo.getDeposit();
-				if ( deposit <= criticalDeposit && Math.abs(deposit - previousDeposit) > EPS ){
-					Intent notificationIntent = new Intent(context, NotificationAlarm.class);
-					PendingIntent contentIntent = PendingIntent.getActivity(context,
-						0, notificationIntent,
-						PendingIntent.FLAG_CANCEL_CURRENT);
-					NotificationManager notificationManager = (NotificationManager) context
-							.getSystemService(Context.NOTIFICATION_SERVICE);
-					Resources resources = context.getResources();
-					NotificationCompat.Builder builder = 
-							new NotificationCompat.Builder(context)
-								.setContentIntent(contentIntent)
-								.setSmallIcon(android.R.drawable.ic_dialog_alert)
-								.setTicker(resources.getString(R.string.low_deposit_ticker))
-								.setWhen(System.currentTimeMillis()) // java.lang.System.currentTimeMillis()
-								.setAutoCancel(true)
-								.setContentTitle(resources.getString(R.string.warning_title))
-								.setContentText(resources.getString(R.string.deposit_key_text_view) + deposit);
-					
-					Notification notification = builder.build();
-					notificationManager.notify(NOTIFY_ID, notification);
-					// previousDeposit = deposit;
-				}
 			}
-			
+			Double deposit = userInfo.getDeposit();
+			if ( deposit <= criticalDeposit && Math.abs(deposit - previousDeposit) > EPS ){
+				Intent notificationIntent = new Intent(context, NotificationAlarm.class);
+				PendingIntent contentIntent = PendingIntent.getActivity(context,
+					0, notificationIntent,
+					PendingIntent.FLAG_CANCEL_CURRENT);
+				NotificationManager notificationManager = (NotificationManager) context
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+				Resources resources = context.getResources();
+				NotificationCompat.Builder builder = 
+						new NotificationCompat.Builder(context)
+							.setContentIntent(contentIntent)
+							.setSmallIcon(android.R.drawable.ic_dialog_alert)
+							.setTicker(resources.getString(R.string.low_deposit_ticker))
+							.setWhen(System.currentTimeMillis()) // java.lang.System.currentTimeMillis()
+							.setAutoCancel(true)
+							.setContentTitle(resources.getString(R.string.warning_title))
+							.setContentText(resources.getString(R.string.deposit_key_text_view) + deposit);
+				
+				Notification notification = builder.build();
+				notificationManager.notify(NOTIFY_ID, notification);
+				previousDeposit = deposit;
+			}			
 			working = false;			
 		}
 		
