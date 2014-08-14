@@ -8,12 +8,11 @@ public class AutoStart extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (context.getSharedPreferences(
+		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED") &&
+				context.getSharedPreferences(
 				SettingsFragment.SHARED_PREFERENCES_NAME, 0).getBoolean(
 				SettingsFragment.NOTIFICATION_SWITCH_NAME, false)) {
-			Intent autoStartService = new Intent(context,
-					NotificationService.class);
-			context.startService(autoStartService);
+			NotificationAlarm.setAlarm(context);
 		}
 	}
 

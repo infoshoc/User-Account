@@ -21,7 +21,7 @@ public class SettingsFragment extends Fragment implements
 		OnCheckedChangeListener, OnEditorActionListener {
 
 	public final static String SHARED_PREFERENCES_NAME = "SettingsFragmentPreferences";
-	public final static String CRITICAL_DEPOSIT_NAME = "criticalDeposit";
+	public final static String CRITICAL_DEPOSIT_KEY = "criticalDeposit";
 	public final static String NOTIFICATION_SWITCH_NAME = "notificationSwitch";
 	private SharedPreferences.Editor sharedPreferencesEditor;
 
@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment implements
 		notificationSwitch.setChecked(sharedPreferences.getBoolean(
 				NOTIFICATION_SWITCH_NAME, false));
 		criticalDepositEditText.setText(Float.toString(sharedPreferences
-				.getFloat(CRITICAL_DEPOSIT_NAME, 0.0f)));
+				.getFloat(CRITICAL_DEPOSIT_KEY, 0.0f)));
 
 		return rootView;
 	}
@@ -60,12 +60,10 @@ public class SettingsFragment extends Fragment implements
 		case R.id.notificationSwitch:
 			if (isChecked) {
 				criticalDepositEditText.setEnabled(true);
-				getActivity().startService(
-						((MainActivity) getActivity()).service);
+				NotificationAlarm.setAlarm(getActivity().getApplicationContext());
 			} else {
 				criticalDepositEditText.setEnabled(false);
-				getActivity().stopService(
-						((MainActivity) getActivity()).service);
+				NotificationAlarm.stopAlarm(getActivity().getApplicationContext());
 			}
 			sharedPreferencesEditor.putBoolean(NOTIFICATION_SWITCH_NAME,
 					isChecked).apply();
@@ -87,7 +85,7 @@ public class SettingsFragment extends Fragment implements
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-					sharedPreferencesEditor.putFloat(CRITICAL_DEPOSIT_NAME,
+					sharedPreferencesEditor.putFloat(CRITICAL_DEPOSIT_KEY,
 							newCriticalDepositValue).apply();
 				}
 				getActivity().getApplicationContext();

@@ -34,8 +34,8 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
-        <service
-            android:name="ua.infoshoc.megastyle.NotificationService"
+        <receiver
+            android:name="ua.infoshoc.megastyle.NotificationAlarm"
             android:enabled="true" />
 
         <receiver android:name="ua.infoshoc.megastyle.AutoStart" >

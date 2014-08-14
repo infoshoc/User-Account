@@ -10,6 +10,8 @@ import org.htmlcleaner.TagNode;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -132,11 +134,21 @@ public abstract class DataDisplayFragment extends Fragment {
 		super.onStop();
 	}
 
+	private boolean isNetworkConnected() {
+		ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		return networkInfo != null;
+	} 
+	
 	private class Update extends AsyncTask<Void, Integer, Void> {
 		protected void onPreExecute() {
-			MainActivity mainActivity = (MainActivity) getActivity();
-			if (mainActivity != null) {
-				mainActivity.setStartedUpdate();
+			if ( !isNetworkConnected() ){
+				cancel(true);
+			}else{
+				MainActivity mainActivity = (MainActivity) getActivity();
+				if (mainActivity != null) {
+					mainActivity.setStartedUpdate();
+				}
 			}
 		}
 

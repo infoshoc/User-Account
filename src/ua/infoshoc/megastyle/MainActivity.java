@@ -41,8 +41,6 @@ public class MainActivity extends ActionBarActivity implements
 	 */
 	private CharSequence mTitle;
 
-	Intent service;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,13 +55,6 @@ public class MainActivity extends ActionBarActivity implements
 		// Set up the drawer.
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
-
-		// Start Service
-		service = new Intent(this, NotificationService.class);
-		if (getSharedPreferences(SettingsFragment.SHARED_PREFERENCES_NAME, 0)
-				.getBoolean(SettingsFragment.NOTIFICATION_SWITCH_NAME, false)) {
-			startService(service);
-		}
 
 		// Set up settings fragment is it is
 		if (savedInstanceState != null
@@ -139,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements
 												.edit().clear().apply();
 									}
 
-									stopService(service);
+									NotificationAlarm.stopAlarm(getApplicationContext());
 
 									Intent intent = new Intent(
 											getApplicationContext(),
