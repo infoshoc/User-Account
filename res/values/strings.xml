@@ -75,9 +75,11 @@
     <string name="critical_deposit_edit_text_hint">Critical deposit level</string>
     <string name="loading_title">Please wait&#8230;</string>
     <string name="loading_message">Loading</string>
-    <string name="support_phone_number_1">+38 04 7254 0589</string>
-    <string name="support_phone_number_2">+38 04 7254 4010</string>
-    <string name="support_phone_number_3">+38 04 7254 4011</string>
+    <string name="customer_care_text_view">Customer\'s Care</string>
+    <string name="support_phone_number_1">+380 472 540 540</string>
+    <string name="technical_support_text_view">Technical Support</string>
+    <string name="support_phone_number_2">+380 472 544 010</string>
+    <string name="support_phone_number_3">+380 931 771 640</string>
     <string name="logout_button">Exit</string>
     <string name="escape_button">Escape</string>
     <string name="logout_warning">All program\'s data and settings will be erased from the device</string>

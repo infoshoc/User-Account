@@ -11,9 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+//import android.util.Log;
 
 public class NotificationAlarm extends BroadcastReceiver {
 	private static final long INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
@@ -21,8 +23,7 @@ public class NotificationAlarm extends BroadcastReceiver {
 
 	private static AlarmManager alarmManager;
 	private static PendingIntent pendingIntent;
-	
-	
+		
 	static class DepositCheckRunnable implements Runnable{
 		private Float criticalDeposit;
 		private Context context;
@@ -31,7 +32,7 @@ public class NotificationAlarm extends BroadcastReceiver {
 		private static UserInfoFragment userInfo;
 		
 		public DepositCheckRunnable(Context context, Intent intent) {
-			Log.d("DEBUG", "DepositCheckRunnable");
+			//Log.d("DEBUG", "DepositCheckRunnable");
 			this.context = context;
 			SharedPreferences sharedPreferences = context.getSharedPreferences(SettingsFragment.SHARED_PREFERENCES_NAME, 0);
 			criticalDeposit = sharedPreferences.getFloat(SettingsFragment.CRITICAL_DEPOSIT_KEY, 0.0f);	
@@ -52,7 +53,7 @@ public class NotificationAlarm extends BroadcastReceiver {
 		
 		@Override
 		public void run() {
-			Log.d("DEBUG", "run");
+			//Log.d("DEBUG", "run");
 			while ( working );
 			working = true;
 			
@@ -90,23 +91,29 @@ public class NotificationAlarm extends BroadcastReceiver {
 		}
 		
 	}
-	
+		
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d("DEBUG", "onReceive");
-		new Thread(new DepositCheckRunnable(context, intent)).start();
+		//Log.d("DEBUG", "onReceive");
+		ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		if ( activeNetworkInfo != null && activeNetworkInfo.isConnected() ){
+			new Thread(new DepositCheckRunnable(context, intent)).start();
+		}
 	}
 	
 	public static void setAlarm(Context context){
-		Log.d("DEBUG", "setAlarm");
-		alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent ( context, NotificationAlarm.class );
-		pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		
-		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), INTERVAL, pendingIntent);
+		if ( alarmManager == null ){
+			//Log.d("DEBUG", "setAlarm");
+			alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent ( context, NotificationAlarm.class );
+			pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(System.currentTimeMillis());
+			
+			alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), INTERVAL, pendingIntent);
+		}
 	}
 	
 	public static void stopAlarm(Context context){

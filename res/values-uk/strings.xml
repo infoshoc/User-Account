@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<resources>
+
+    <string name="app_name">Кабінет Користувача</string>
+    <string name="login_text_view">Вхід</string>
+    <string name="username_edit_text">Ім\'я користувача</string>
+    <string name="password_edit_text">Пароль</string>
+    <string name="login_button">Війти</string>
+    
+    <string name="title_user_info">Информація про користувача</string>
+    <string name="title_money">Фінансові операції</string>
+    <string name="title_payments">Сплати</string>
+    <string name="title_withdrawal">Зняття грошей</string>
+    <string name="title_internet">Інтернет</string>
+    <string name="title_statistics">Статистика</string>
+    <string name="title_support">Технічна підтримка</string>
+    <string name="title_logout">Вихід</string>
+    
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Налаштування</string>
+    <string name="action_update">Оновити</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="login_key_text_view">Логін:</string>
+    <string name="deposit_key_text_view">Депозит:</string>
+    <string name="additional_deposit_key_text_view">Додатковий депозит:</string>
+    <string name="credit_key_text_view">Кредит:</string>
+    <string name="credit_date_key_text_view">Дата:</string>
+    <string name="discount_key_text_view">Знижка:</string>
+    <string name="discount_date_key_text_view">Дата:</string>
+    <string name="name_key_text_view">ПІБ:</string>
+    <string name="phone_key_text_view">Телефон:</string>
+    <string name="address_key_text_view">Адреса:</string>
+    <string name="email_key_text_view">E-mail:</string>
+    <string name="contract_key_text_view">Договір:</string>
+    <string name="contract_date_key_text_view">Дата:</string>
+    <string name="status_key_text_view">Статус:</string>
+    <string name="service_key_textview">Послуга:</string>
+    <string name="tariff_key_text_view">Тарифный план:</string>
+    <string name="simultaneously_key_text_view">Одночасно:</string>
+    <string name="ip_key_text_view">IP:</string>
+    <string name="netmask_key_text_view">Netmask:</string>
+    <string name="speed_key_text_view">Швидкість (Kb):</string>
+    <string name="cid_key_text_view">CID:</string>
+    <string name="service_status_key_text_view">Статус:</string>
+    <string name="payment_key_text_view">Періодичні сплати:</string>
+    <string name="finish_key_text_view">Закінчення:</string>
+    
+    <string name="date_header_text_view">Дата</string>
+    <string name="description_header_text_view">Опис</string>
+    <string name="sum_header_text_view">Сумма</string>
+    <string name="deposit_header_text_view">Депозит</string>
+    <string name="type_header_text_view">Тип</string>
+    <string name="overall_key_text_view">Усього:</string>
+    <string name="sum_key_text_view">Сумма:</string>
+    
+    <string name="ip_header_text_view">IP</string>
+    <string name="cid_header_text_view">CID</string>
+    <string name="duration_header_text_view">Тривалість</string>
+    <string name="received_header_text_view">Отримано</string>
+    <string name="sent_header_text_view">Надіслано</string>
+    
+    
+    <string name="subject_hint_edit_text">Тема</string>
+    <string name="chapter_spinner">Разделы</string>
+    <string name="message_hint_edit_text">Сообщение</string>
+    <string name="browse_button">Обзор&#8230;</string>
+    <string name="state_spinner">Состояние</string>
+    <string name="priority_spinner">Приоритет</string>
+    <string name="send_button">Отправить</string>
+    
+    <string name="payment_tab">Сплати</string>
+    <string name="withdrawal_tab">Зняття грошей</string>
+    <string name="internet_tab">Інтернет</string>
+    <string name="statistics_tab">Статистика</string>
+    
+    <string name="low_deposit_ticker">Депозит закінчується</string>
+    <string name="warning_title">Попередження!</string>  
+    
+    <string name="switch_notification">Попереджати при досягненні депозитом критичного рівня</string>
+    <string name="critical_deposit_edit_text_hint">Критична сумма депозиту</string>
+    
+    <string name="loading_title">Зачекайте, будь ласка&#8230;</string>
+    <string name="loading_message">Завантаження</string>
+    
+    <string name="customer_care_text_view">Абонентський відділ</string>
+    <string name="technical_support_text_view">Служба технічної підтримки</string>
+    
+    <string name="logout_button">Вийти</string>
+    <string name="escape_button">Відміна</string>
+    <string name="logout_warning">Усі данні програми і налаштування будуть видалені із приладу</string>
+    
+    <string name="login_error">Невдається увійти</string>
+    
+</resources>
