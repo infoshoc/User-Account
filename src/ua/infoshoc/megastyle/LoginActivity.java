@@ -22,49 +22,6 @@ import android.widget.Toast;
 public class LoginActivity extends Activity implements OnClickListener,
 		OnEditorActionListener {
 
-	static String login(Context context, String login, String password)
-			throws Exception {
-		final String URL = "https://bills.megastyle.com:9443/index.cgi";
-
-		// Do request
-		Request loginRequest = new Request(URL);
-		loginRequest.addParam("passwd", password);
-		loginRequest.addParam("user", login);
-
-		TagNode result = loginRequest.send(context.getResources());
-
-		// check errors
-		String sid = null;
-		if (result == null) {
-			throw new Exception("Can not login");
-		} else {
-			TagNode errorNode = result.findElementByAttValue("id",
-					"info_message", true, true);
-			if (errorNode != null) {
-				throw new Exception(errorNode.getText().toString());
-			} else {
-				TagNode[] sids = result.getElementsByAttValue("name", "sid",
-						true, true);
-				if (sids.length == 0) {
-					throw new Exception("No SID is found");
-				} else {
-					sid = sids[0].getAttributeByName("value");
-				}
-			}
-		}
-
-		return sid;
-	}
-
-	public final static String SHARED_PREFERENCES_NAME = "LoginActivityPreferences";
-	public final static String LOGIN_KEY = "login";
-	public final static String PASSWORD_KEY = "password";
-	private SharedPreferences.Editor sharedPreferencesEditor;
-
-	public final static String SID_NAME = "sid";
-	public final static String LOGIN_NAME = "login";
-	public final static String PASSWORD_NAME = "password";
-
 	class LoginTask extends AsyncTask<String, Integer, String> {
 		@Override
 		protected String doInBackground(String... params) {
@@ -102,9 +59,74 @@ public class LoginActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public final static String SHARED_PREFERENCES_NAME = "LoginActivityPreferences";
+	public final static String LOGIN_KEY = "login";
+	public final static String PASSWORD_KEY = "password";
+	public final static String LOGIN_NAME = "login";
+
+	static String login(Context context, String login, String password)
+			throws Exception {
+		final String URL = "https://bills.megastyle.com:9443/index.cgi";
+
+		// Do request
+		Request loginRequest = new Request(URL);
+		loginRequest.addParam("passwd", password);
+		loginRequest.addParam("user", login);
+
+		TagNode result = loginRequest.send(context.getResources());
+
+		// check errors
+		String sid = null;
+		if (result == null) {
+			throw new Exception("Can not login");
+		} else {
+			TagNode errorNode = result.findElementByAttValue("id",
+					"info_message", true, true);
+			if (errorNode != null) {
+				throw new Exception(errorNode.getText().toString());
+			} else {
+				TagNode[] sids = result.getElementsByAttValue("name", "sid",
+						true, true);
+				if (sids.length == 0) {
+					throw new Exception("No SID is found");
+				} else {
+					sid = sids[0].getAttributeByName("value");
+				}
+			}
+		}
+
+		return sid;
+	}
+	private SharedPreferences.Editor sharedPreferencesEditor;
+	public final static String SID_NAME = "sid";
+
+	public final static String PASSWORD_NAME = "password";
+
 	private EditText loginEditText;
 	private EditText passwordEditText;
 	private Button loginButton;
+
+	private String user;
+
+	private String password;
+	private ProgressDialog progressDialog;
+
+	@Override
+	public void onClick(View view) {
+		int viewId = view.getId();
+		switch (viewId) {
+		case R.id.loginButton:
+			progressDialog = ProgressDialog.show(this,
+					getString(R.string.loading_title),
+					getString(R.string.loading_title));
+
+			loginButton.setEnabled(false);
+			user = loginEditText.getText().toString();
+			password = passwordEditText.getText().toString();
+			new LoginTask().execute(user, password);
+			break;
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,28 +152,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 		}
 
 		sharedPreferencesEditor = sharedPreferences.edit();
-	}
-
-	private String user;
-	private String password;
-
-	private ProgressDialog progressDialog;
-
-	@Override
-	public void onClick(View view) {
-		int viewId = view.getId();
-		switch (viewId) {
-		case R.id.loginButton:
-			progressDialog = ProgressDialog.show(this,
-					getString(R.string.loading_title),
-					getString(R.string.loading_title));
-
-			loginButton.setEnabled(false);
-			user = loginEditText.getText().toString();
-			password = passwordEditText.getText().toString();
-			new LoginTask().execute(user, password);
-			break;
-		}
 	}
 
 	@Override

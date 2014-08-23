@@ -18,29 +18,6 @@ public class InternetFragment extends Fragment implements OnClickListener {
 	private Button statisticsTabButton;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_internet, container,
-				false);
-
-		internetTabButton = (Button) rootView
-				.findViewById(R.id.internet_tab_button);
-		internetTabButton.setOnClickListener(this);
-		statisticsTabButton = (Button) rootView
-				.findViewById(R.id.statistics_tab_button);
-		statisticsTabButton.setOnClickListener(this);
-
-		if (savedInstanceState == null) {
-			lastTabId = R.id.internet_tab_button;
-		} else {
-			lastTabId = savedInstanceState.getInt(LAST_TAB_ID_KEY);
-		}
-		onClick(rootView.findViewById(lastTabId));
-
-		return rootView;
-	}
-
-	@Override
 	public void onClick(View v) {
 		int viewId = v.getId();
 		lastTabId = viewId;
@@ -62,6 +39,29 @@ public class InternetFragment extends Fragment implements OnClickListener {
 					.commit();
 			break;
 		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_internet, container,
+				false);
+
+		internetTabButton = (Button) rootView
+				.findViewById(R.id.internet_tab_button);
+		internetTabButton.setOnClickListener(this);
+		statisticsTabButton = (Button) rootView
+				.findViewById(R.id.statistics_tab_button);
+		statisticsTabButton.setOnClickListener(this);
+
+		if (savedInstanceState == null) {
+			lastTabId = R.id.internet_tab_button;
+		} else {
+			lastTabId = savedInstanceState.getInt(LAST_TAB_ID_KEY);
+		}
+		onClick(rootView.findViewById(lastTabId));
+
+		return rootView;
 	}
 
 	@Override

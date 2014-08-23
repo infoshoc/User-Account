@@ -23,6 +23,33 @@ public class MoneyOperationsFragment extends Fragment implements
 	private Button paymentTabButton;
 	private Button withdrawalTabButton;
 
+	private float mx, my;
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.payment_tab_button:
+			// paymentTabButton.setBackgroundResource(android.R.drawable.divider_horizontal_bright);
+			paymentTabButton.setEnabled(false);
+			// withdrawalTabButton.setBackgroundResource(0);
+			withdrawalTabButton.setEnabled(true);
+			getActivity().getActionBar().setTitle(R.string.title_payments);
+			getFragmentManager().beginTransaction()
+					.replace(R.id.container1, new PaymentsFragment()).commit();
+			break;
+		case R.id.withdrawal_tab_button:
+			// withdrawalTabButton.setBackgroundResource(android.R.drawable.divider_horizontal_bright);
+			withdrawalTabButton.setEnabled(false);
+			// paymentTabButton.setBackgroundResource(0);
+			paymentTabButton.setEnabled(true);
+			getActivity().getActionBar().setTitle(R.string.title_withdrawal);
+			getFragmentManager().beginTransaction()
+					.replace(R.id.container1, new WithdrawalFragment())
+					.commit();
+			break;
+		}
+	}
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
@@ -50,8 +77,6 @@ public class MoneyOperationsFragment extends Fragment implements
 
 		return rootView;
 	}
-
-	private float mx, my;
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -81,31 +106,6 @@ public class MoneyOperationsFragment extends Fragment implements
 		}
 
 		return true;
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.payment_tab_button:
-			// paymentTabButton.setBackgroundResource(android.R.drawable.divider_horizontal_bright);
-			paymentTabButton.setEnabled(false);
-			// withdrawalTabButton.setBackgroundResource(0);
-			withdrawalTabButton.setEnabled(true);
-			getActivity().getActionBar().setTitle(R.string.title_payments);
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container1, new PaymentsFragment()).commit();
-			break;
-		case R.id.withdrawal_tab_button:
-			// withdrawalTabButton.setBackgroundResource(android.R.drawable.divider_horizontal_bright);
-			withdrawalTabButton.setEnabled(false);
-			// paymentTabButton.setBackgroundResource(0);
-			paymentTabButton.setEnabled(true);
-			getActivity().getActionBar().setTitle(R.string.title_withdrawal);
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container1, new WithdrawalFragment())
-					.commit();
-			break;
-		}
 	}
 
 }

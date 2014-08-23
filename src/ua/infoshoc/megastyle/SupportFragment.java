@@ -35,6 +35,13 @@ import android.widget.TextView;
 public class SupportFragment extends Fragment implements OnClickListener {
 
 	@Override
+	public void onClick(View v) {
+		Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+				+ ((TextView) v).getText()));
+		startActivity(intent);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
@@ -46,13 +53,6 @@ public class SupportFragment extends Fragment implements OnClickListener {
 
 		return rootView;
 
-	}
-
-	@Override
-	public void onClick(View v) {
-		Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-				+ ((TextView) v).getText()));
-		startActivity(intent);
 	}
 
 	/* for request */

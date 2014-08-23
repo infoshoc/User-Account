@@ -53,6 +53,37 @@ public class InternetServiceFragment extends DataDisplayFragment {
 	}
 
 	@Override
+	protected DataDisplayFragment flush() {
+		for (int i = 0; i < FIELDS_SIZE; ++i) {
+			if (textViews[i] != null && values[i] != null) {
+				textViews[i].setText(values[i]);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	protected DataDisplayFragment getCache() {
+		for (int fieldId = 0; fieldId < FIELDS_SIZE; ++fieldId) {
+			if (values[fieldId] == null) {
+				values[fieldId] = sharedPreferences.getString(
+						Integer.toString(fieldId), null);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	protected String getIndexValue() {
+		return INDEX_VALUE;
+	}
+
+	@Override
+	protected String getSharedPreferencesName() {
+		return SHARED_PREFERENCES_NAME;
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -79,6 +110,18 @@ public class InternetServiceFragment extends DataDisplayFragment {
 		flush();
 
 		return rootView;
+	}
+
+	@Override
+	protected DataDisplayFragment saveCache() {
+		for (Integer i = 0; i < FIELDS_SIZE; i++) {
+			if (values[i] != null) {
+				sharedPreferencesEditor.putString(i.toString(),
+						values[i].toString());
+			}
+		}
+		sharedPreferencesEditor.apply();
+		return this;
 	}
 
 	@Override
@@ -122,48 +165,5 @@ public class InternetServiceFragment extends DataDisplayFragment {
 			}
 		}
 		return this;
-	}
-
-	@Override
-	protected DataDisplayFragment saveCache() {
-		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			if (values[i] != null) {
-				sharedPreferencesEditor.putString(i.toString(),
-						values[i].toString());
-			}
-		}
-		sharedPreferencesEditor.apply();
-		return this;
-	}
-
-	@Override
-	protected DataDisplayFragment getCache() {
-		for (int fieldId = 0; fieldId < FIELDS_SIZE; ++fieldId) {
-			if (values[fieldId] == null) {
-				values[fieldId] = sharedPreferences.getString(
-						Integer.toString(fieldId), null);
-			}
-		}
-		return this;
-	}
-
-	@Override
-	protected DataDisplayFragment flush() {
-		for (int i = 0; i < FIELDS_SIZE; ++i) {
-			if (textViews[i] != null && values[i] != null) {
-				textViews[i].setText(values[i]);
-			}
-		}
-		return this;
-	}
-
-	@Override
-	protected String getIndexValue() {
-		return INDEX_VALUE;
-	}
-
-	@Override
-	protected String getSharedPreferencesName() {
-		return SHARED_PREFERENCES_NAME;
 	}
 }

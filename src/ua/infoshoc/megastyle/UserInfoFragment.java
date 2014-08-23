@@ -81,9 +81,39 @@ public class UserInfoFragment extends DataDisplayFragment {
 		values = new CharSequence[FIELDS_SIZE];
 	}
 
+	@Override
+	protected UserInfoFragment flush() {
+		for (int i = 0; i < FIELDS_SIZE; ++i) {
+			if (textViews[i] != null && values[i] != null) {
+				textViews[i].setText(values[i]);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	protected UserInfoFragment getCache() {
+		for (Integer i = 0; i < FIELDS_SIZE; i++) {
+			if (values[i] == null) {
+				values[i] = sharedPreferences.getString(i.toString(), null);
+			}
+		}
+		return this;
+	}
+
 	/* get fields */
 	public Double getDeposit() {
 		return Double.parseDouble(values[DEPOSIT_IDX].toString());
+	}
+
+	@Override
+	protected String getIndexValue() {
+		return INDEX_VALUE;
+	}
+
+	@Override
+	protected String getSharedPreferencesName() {
+		return SHARED_PREFERENCES_NAME;
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -150,6 +180,18 @@ public class UserInfoFragment extends DataDisplayFragment {
 		flush();
 
 		return rootView;
+	}
+
+	@Override
+	protected UserInfoFragment saveCache() {
+		for (Integer i = 0; i < FIELDS_SIZE; i++) {
+			if (values[i] != null) {
+				sharedPreferencesEditor.putString(i.toString(),
+						values[i].toString());
+			}
+		}
+		sharedPreferencesEditor.apply();
+		return this;
 	}
 
 	@Override
@@ -253,47 +295,5 @@ public class UserInfoFragment extends DataDisplayFragment {
 			}
 		}
 		return this;
-	}
-
-	@Override
-	protected UserInfoFragment getCache() {
-		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			if (values[i] == null) {
-				values[i] = sharedPreferences.getString(i.toString(), null);
-			}
-		}
-		return this;
-	}
-
-	@Override
-	protected UserInfoFragment saveCache() {
-		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			if (values[i] != null) {
-				sharedPreferencesEditor.putString(i.toString(),
-						values[i].toString());
-			}
-		}
-		sharedPreferencesEditor.apply();
-		return this;
-	}
-
-	@Override
-	protected UserInfoFragment flush() {
-		for (int i = 0; i < FIELDS_SIZE; ++i) {
-			if (textViews[i] != null && values[i] != null) {
-				textViews[i].setText(values[i]);
-			}
-		}
-		return this;
-	}
-
-	@Override
-	protected String getIndexValue() {
-		return INDEX_VALUE;
-	}
-
-	@Override
-	protected String getSharedPreferencesName() {
-		return SHARED_PREFERENCES_NAME;
 	}
 }

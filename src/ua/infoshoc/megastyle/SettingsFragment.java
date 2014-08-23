@@ -28,6 +28,28 @@ public class SettingsFragment extends Fragment implements
 	EditText criticalDepositEditText;
 
 	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		int viewId = buttonView.getId();
+		switch (viewId) {
+		case R.id.notificationSwitch:
+			if (isChecked) {
+				criticalDepositEditText.setEnabled(true);
+				NotificationAlarm.setAlarm(getActivity()
+						.getApplicationContext());
+			} else {
+				criticalDepositEditText.setEnabled(false);
+				NotificationAlarm.stopAlarm(getActivity()
+						.getApplicationContext());
+			}
+			/*
+			 * sharedPreferencesEditor.putBoolean(NOTIFICATION_SWITCH_NAME,
+			 * isChecked).apply();
+			 */
+			break;
+		}
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_settings, container,
@@ -51,28 +73,6 @@ public class SettingsFragment extends Fragment implements
 				.getFloat(CRITICAL_DEPOSIT_KEY, 0.0f)));
 
 		return rootView;
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		int viewId = buttonView.getId();
-		switch (viewId) {
-		case R.id.notificationSwitch:
-			if (isChecked) {
-				criticalDepositEditText.setEnabled(true);
-				NotificationAlarm.setAlarm(getActivity()
-						.getApplicationContext());
-			} else {
-				criticalDepositEditText.setEnabled(false);
-				NotificationAlarm.stopAlarm(getActivity()
-						.getApplicationContext());
-			}
-			/*
-			 * sharedPreferencesEditor.putBoolean(NOTIFICATION_SWITCH_NAME,
-			 * isChecked).apply();
-			 */
-			break;
-		}
 	}
 
 	@Override

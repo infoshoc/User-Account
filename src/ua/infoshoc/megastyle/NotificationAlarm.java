@@ -18,20 +18,13 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 public class NotificationAlarm extends BroadcastReceiver {
-	private static final String SHARED_PREFERENCES_NAME = "NotificationAlarmPreferences";
-	private static final String PREVIOUS_DEPOSIT_KEY = "previousDeposit";
-
-	private static final long INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
-	private static final int NOTIFY_ID = 101;
-
-	private static AlarmManager alarmManager;
-	private static PendingIntent pendingIntent;
-
 	static class DepositCheckRunnable implements Runnable {
 		private Float criticalDeposit;
 		private Context context;
 		private static Double previousDeposit = -1.0;
 		private static UserInfoFragment userInfo;
+
+		private static final double EPS = 1e-4;
 
 		public DepositCheckRunnable(Context context, Intent intent) {
 			// Log.d("DEBUG", "DepositCheckRunnable");
@@ -53,8 +46,6 @@ public class NotificationAlarm extends BroadcastReceiver {
 						.setPassword(password);
 			}
 		}
-
-		private static final double EPS = 1e-4;
 
 		@Override
 		public void run() {
@@ -107,19 +98,15 @@ public class NotificationAlarm extends BroadcastReceiver {
 			}
 		}
 	}
+	private static final String SHARED_PREFERENCES_NAME = "NotificationAlarmPreferences";
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		// Log.d("DEBUG", "onReceive");
-		ConnectivityManager connectivityManager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager
-				.getActiveNetworkInfo();
-		if (activeNetworkInfo != null && activeNetworkInfo.isConnected()
-				&& isAlarmSet(context)) {
-			new Thread(new DepositCheckRunnable(context, intent)).start();
-		}
-	}
+	private static final String PREVIOUS_DEPOSIT_KEY = "previousDeposit";
+	private static final long INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
+
+	private static final int NOTIFY_ID = 101;
+	private static AlarmManager alarmManager;
+
+	private static PendingIntent pendingIntent;
 
 	public static boolean isAlarmSet(Context context) {
 		return context.getSharedPreferences(
@@ -159,6 +146,19 @@ public class NotificationAlarm extends BroadcastReceiver {
 				0).edit()
 				.putBoolean(SettingsFragment.NOTIFICATION_SWITCH_NAME, false)
 				.apply();
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		// Log.d("DEBUG", "onReceive");
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		if (activeNetworkInfo != null && activeNetworkInfo.isConnected()
+				&& isAlarmSet(context)) {
+			new Thread(new DepositCheckRunnable(context, intent)).start();
+		}
 	}
 
 }

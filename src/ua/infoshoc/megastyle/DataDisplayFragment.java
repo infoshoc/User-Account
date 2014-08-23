@@ -22,78 +22,93 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public abstract class DataDisplayFragment extends Fragment {
-	public abstract DataDisplayFragment update() throws KeyManagementException,
-			CertificateException, KeyStoreException, NoSuchAlgorithmException,
-			IOException;
+	private class Update extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				update();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 
-	protected abstract DataDisplayFragment saveCache();
+		protected void onPostExecute(Void v) {
+			MainActivity mainActivity = (MainActivity) getActivity();
+			if (mainActivity != null) {
+				mainActivity.setFinishedUpdate();
+			}
+			flush();
+			saveCache();
+			cancel(false);
+		}
 
-	protected abstract DataDisplayFragment getCache();
-
-	protected abstract DataDisplayFragment flush();
-
-	protected abstract String getIndexValue();
-
-	protected abstract String getSharedPreferencesName();
+		protected void onPreExecute() {
+			MainActivity mainActivity = (MainActivity) getActivity();
+			if (mainActivity != null) {
+				mainActivity.setStartedUpdate();
+			}
+		}
+	}
 
 	protected String login;
-	protected String password;
-	protected String sid;
-	protected Context context;
-	protected SharedPreferences sharedPreferences;
-	protected SharedPreferences.Editor sharedPreferencesEditor;
 
+	protected String password;
+
+	protected String sid;
+
+	protected Context context;
+
+	protected SharedPreferences sharedPreferences;
+
+	protected SharedPreferences.Editor sharedPreferencesEditor;
 	protected final static String INDEX_NAME = "index";
 	protected final static String SID_NAME = "sid";
 	protected final static String SID_KEY = "sid";
 	protected final static String URL = "https://bills.megastyle.com:9443/index.cgi";
+	private Update updateAsyncTask;
 
-	public final DataDisplayFragment setLogin(String login) {
-		this.login = login;
-		return this;
-	}
-
-	public final DataDisplayFragment setPassword(String password) {
-		this.password = password;
-		return this;
-	}
-
-	public final DataDisplayFragment setContext(Context context) {
-		this.context = context;
-		return this;
-	}
-
+	protected abstract DataDisplayFragment flush();
+	protected abstract DataDisplayFragment getCache();
 	public final Context getContext() {
 		return context;
 	}
+	protected abstract String getIndexValue();
 
-	public final TagNode update(Request.ParameterValue params[])
-			throws KeyManagementException, CertificateException,
-			KeyStoreException, NoSuchAlgorithmException, IOException {
-		Request request = new Request(URL, params).addParam(SID_KEY, sid)
-				.addParam(INDEX_NAME, getIndexValue()).addCookie(SID_NAME, sid);
-		TagNode root = request.send(getContext().getResources());
-		TagNode result = root.findElementByAttValue("class",
-				"kabinet-center_col", true, true);
-		if (result == null) {
-			try {
-				sid = LoginActivity.login(getContext(), login, password);
-				result = update(params);
-			} catch (Exception e) {
-				e.printStackTrace();
-				Toast.makeText(getContext(), e.getLocalizedMessage(),
-						Toast.LENGTH_LONG).show();
-				updateAsyncTask.cancel(true);
-			}
+	protected abstract String getSharedPreferencesName();
+
+	protected TextView makeTextView(int textId) {
+		return makeTextView(textId, true);
+	}
+
+	protected TextView makeTextView(int textId, Boolean isPadding) {
+		return makeTextView(getContext().getString(textId), isPadding);
+	}
+
+	protected TextView makeTextView(String text) {
+		return makeTextView(text, true);
+	}
+
+	protected TextView makeTextView(String text, Boolean isPadding) {
+		TextView result = new TextView(getContext());
+		result.setText(text);
+		if (isPadding) {
+			result.setPadding(
+					0,
+					0,
+					Math.round(getContext().getResources().getDimension(
+							R.dimen.textview_right_padding)), 0);
 		}
+		result.setGravity(Gravity.CENTER);
+		result.setTextColor(getContext().getResources().getColor(
+				R.color.default_text_color));
 		return result;
+
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-
-	private Update updateAsyncTask;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,61 +147,46 @@ public abstract class DataDisplayFragment extends Fragment {
 		super.onStop();
 	}
 
-	private class Update extends AsyncTask<Void, Integer, Void> {
-		protected void onPreExecute() {
-			MainActivity mainActivity = (MainActivity) getActivity();
-			if (mainActivity != null) {
-				mainActivity.setStartedUpdate();
-			}
-		}
+	protected abstract DataDisplayFragment saveCache();
 
-		@Override
-		protected Void doInBackground(Void... params) {
+	public final DataDisplayFragment setContext(Context context) {
+		this.context = context;
+		return this;
+	}
+
+	public final DataDisplayFragment setLogin(String login) {
+		this.login = login;
+		return this;
+	}
+
+	public final DataDisplayFragment setPassword(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public abstract DataDisplayFragment update() throws KeyManagementException,
+			CertificateException, KeyStoreException, NoSuchAlgorithmException,
+			IOException;
+
+	public final TagNode update(Request.ParameterValue params[])
+			throws KeyManagementException, CertificateException,
+			KeyStoreException, NoSuchAlgorithmException, IOException {
+		Request request = new Request(URL, params).addParam(SID_KEY, sid)
+				.addParam(INDEX_NAME, getIndexValue()).addCookie(SID_NAME, sid);
+		TagNode root = request.send(getContext().getResources());
+		TagNode result = root.findElementByAttValue("class",
+				"kabinet-center_col", true, true);
+		if (result == null) {
 			try {
-				update();
+				sid = LoginActivity.login(getContext(), login, password);
+				result = update(params);
 			} catch (Exception e) {
 				e.printStackTrace();
+				Toast.makeText(getContext(), e.getLocalizedMessage(),
+						Toast.LENGTH_LONG).show();
+				updateAsyncTask.cancel(true);
 			}
-			return null;
 		}
-
-		protected void onPostExecute(Void v) {
-			MainActivity mainActivity = (MainActivity) getActivity();
-			if (mainActivity != null) {
-				mainActivity.setFinishedUpdate();
-			}
-			flush();
-			saveCache();
-			cancel(false);
-		}
-	}
-
-	protected TextView makeTextView(String text, Boolean isPadding) {
-		TextView result = new TextView(getContext());
-		result.setText(text);
-		if (isPadding) {
-			result.setPadding(
-					0,
-					0,
-					Math.round(getContext().getResources().getDimension(
-							R.dimen.textview_right_padding)), 0);
-		}
-		result.setGravity(Gravity.CENTER);
-		result.setTextColor(getContext().getResources().getColor(
-				R.color.default_text_color));
 		return result;
-
-	}
-
-	protected TextView makeTextView(int textId, Boolean isPadding) {
-		return makeTextView(getContext().getString(textId), isPadding);
-	}
-
-	protected TextView makeTextView(int textId) {
-		return makeTextView(textId, true);
-	}
-
-	protected TextView makeTextView(String text) {
-		return makeTextView(text, true);
 	}
 }

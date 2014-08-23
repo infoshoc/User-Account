@@ -86,19 +86,6 @@ public class MultipartFormData {
 				charset), true);
 	}
 
-	public MultipartFormData add(String name, String value) {
-		printWriter
-				.append("--" + boundary)
-				.append(LINE_FEED)
-				.append("Content-Disposition: form-data; name=\"" + name + "\"")
-				.append(LINE_FEED)
-				.append("Content-Type: text/plain; charset=" + charset)
-				.append(LINE_FEED).append(LINE_FEED).append(value)
-				.append(LINE_FEED).flush();
-
-		return this;
-	}
-
 	public MultipartFormData add(String name, File file) throws IOException {
 		printWriter.append("--" + boundary).append(LINE_FEED).flush();
 		if (file != null && file.exists()) {
@@ -131,6 +118,19 @@ public class MultipartFormData {
 					.append(LINE_FEED).append(LINE_FEED).flush();
 
 		}
+
+		return this;
+	}
+
+	public MultipartFormData add(String name, String value) {
+		printWriter
+				.append("--" + boundary)
+				.append(LINE_FEED)
+				.append("Content-Disposition: form-data; name=\"" + name + "\"")
+				.append(LINE_FEED)
+				.append("Content-Type: text/plain; charset=" + charset)
+				.append(LINE_FEED).append(LINE_FEED).append(value)
+				.append(LINE_FEED).flush();
 
 		return this;
 	}

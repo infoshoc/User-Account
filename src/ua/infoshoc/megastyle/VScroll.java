@@ -7,16 +7,16 @@ import android.widget.ScrollView;
 
 public class VScroll extends ScrollView {
 
-	public VScroll(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+	public VScroll(Context context) {
+		super(context);
 	}
 
 	public VScroll(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public VScroll(Context context) {
-		super(context);
+	public VScroll(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
 	}
 
 	@Override

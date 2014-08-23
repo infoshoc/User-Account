@@ -25,62 +25,26 @@ import android.content.res.Resources;
 
 public class Request {
 
+	public static class ParameterValue {
+		private String parameter;
+		private String value;
+
+		ParameterValue(String _parameter, String _value) {
+			parameter = _parameter;
+			value = _value;
+		}
+
+		public String getParameter() {
+			return parameter;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 	private String url;
+
 	private ArrayList<ParameterValue> params, cookies;
-
-	Request(String url) {
-		this.url = url;
-		params = new ArrayList<ParameterValue>();
-		cookies = new ArrayList<ParameterValue>();
-	}
-
-	Request(String url, ParameterValue params[]) {
-		this(url);
-		if (params != null) {
-			Collections.addAll(this.params, params);
-		}
-	}
-
-	public Request addParam(String key, String value) {
-		params.add(new ParameterValue(key, value));
-		return this;
-	}
-
-	public Request addCookie(String key, String value) {
-		cookies.add(new ParameterValue(key, value));
-		return this;
-	}
-
-	private String formURL() {
-		if (url == null) {
-			return null;
-		}
-		int paramsLength = params.size();
-		if (paramsLength == 0) {
-			return url;
-		}
-		String result = url + "?" + params.get(0).getParameter() + "="
-				+ params.get(0).getValue();
-		for (int i = 1; i < paramsLength; ++i) {
-			result += "&" + params.get(i).getParameter() + "="
-					+ params.get(i).getValue();
-		}
-		return result;
-	}
-
-	private String formCookies() {
-		String result = null;
-		int cookiesLength = cookies.size();
-		if (cookiesLength != 0) {
-			result = cookies.get(0).getParameter() + '='
-					+ cookies.get(0).getValue();
-			for (int i = 1; i < cookiesLength; ++i) {
-				result += "; " + cookies.get(i).getParameter() + "="
-						+ cookies.get(i).getValue();
-			}
-		}
-		return result;
-	}
 
 	private static SSLSocketFactory sslSocketFactory;
 
@@ -112,6 +76,60 @@ public class Request {
 		sslSocketFactory = context.getSocketFactory();
 	}
 
+	Request(String url) {
+		this.url = url;
+		params = new ArrayList<ParameterValue>();
+		cookies = new ArrayList<ParameterValue>();
+	}
+
+	Request(String url, ParameterValue params[]) {
+		this(url);
+		if (params != null) {
+			Collections.addAll(this.params, params);
+		}
+	}
+
+	public Request addCookie(String key, String value) {
+		cookies.add(new ParameterValue(key, value));
+		return this;
+	}
+
+	public Request addParam(String key, String value) {
+		params.add(new ParameterValue(key, value));
+		return this;
+	}
+
+	private String formCookies() {
+		String result = null;
+		int cookiesLength = cookies.size();
+		if (cookiesLength != 0) {
+			result = cookies.get(0).getParameter() + '='
+					+ cookies.get(0).getValue();
+			for (int i = 1; i < cookiesLength; ++i) {
+				result += "; " + cookies.get(i).getParameter() + "="
+						+ cookies.get(i).getValue();
+			}
+		}
+		return result;
+	}
+
+	private String formURL() {
+		if (url == null) {
+			return null;
+		}
+		int paramsLength = params.size();
+		if (paramsLength == 0) {
+			return url;
+		}
+		String result = url + "?" + params.get(0).getParameter() + "="
+				+ params.get(0).getValue();
+		for (int i = 1; i < paramsLength; ++i) {
+			result += "&" + params.get(i).getParameter() + "="
+					+ params.get(i).getValue();
+		}
+		return result;
+	}
+
 	public TagNode send(Resources resources) throws CertificateException,
 			IOException, KeyStoreException, NoSuchAlgorithmException,
 			KeyManagementException {
@@ -134,23 +152,5 @@ public class Request {
 		HtmlCleaner cleaner = new HtmlCleaner();
 		rootNode = cleaner.clean(in);
 		return rootNode;
-	}
-
-	public static class ParameterValue {
-		private String parameter;
-		private String value;
-
-		ParameterValue(String _parameter, String _value) {
-			parameter = _parameter;
-			value = _value;
-		}
-
-		public String getParameter() {
-			return parameter;
-		}
-
-		public String getValue() {
-			return value;
-		}
 	}
 }

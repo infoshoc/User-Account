@@ -53,153 +53,7 @@ public class StatisticsFragment extends DataDisplayFragment implements
 	private ScrollView vScroll;
 	private HorizontalScrollView hScroll;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		View rootView = inflater.inflate(R.layout.fragment_statistics,
-				container, false);
-		tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
-		ipTextView = (TextView) rootView.findViewById(R.id.ipTextView);
-		cidTextView = (TextView) rootView.findViewById(R.id.cidTextView);
-		durationTextView = (TextView) rootView
-				.findViewById(R.id.durationTextView);
-		receivedTextView = (TextView) rootView
-				.findViewById(R.id.receivedTextView);
-		sentTextView = (TextView) rootView.findViewById(R.id.sentTextView);
-		flush();
-
-		vScroll = (ScrollView) rootView.findViewById(R.id.vScroll);
-		hScroll = (HorizontalScrollView) rootView.findViewById(R.id.hScroll);
-		vScroll.setOnTouchListener(this);
-
-		return rootView;
-	}
-
 	private float mx, my;
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-
-		float curX, curY;
-
-		switch (event.getAction()) {
-
-		case MotionEvent.ACTION_DOWN:
-			mx = event.getX();
-			my = event.getY();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			curX = event.getX();
-			curY = event.getY();
-			vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
-			hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
-			mx = curX;
-			my = curY;
-			break;
-		case MotionEvent.ACTION_UP:
-			curX = event.getX();
-			curY = event.getY();
-			vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
-			hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
-			break;
-		}
-
-		return true;
-	}
-
-	@Override
-	public DataDisplayFragment update() throws KeyManagementException,
-			CertificateException, KeyStoreException, NoSuchAlgorithmException,
-			IOException {
-		TagNode div = update(null);
-		TagNode tableTag = div.findElementByAttValue("id",
-				"kabinet-filter_table", true, true).findElementByName("table",
-				true);
-		TagNode[] trs = tableTag.getElementsByName("tr", true);
-		TagNode[] tds = trs[1].getChildTags();
-		ip = tds[0].getText().toString();
-		cid = tds[1].getText().toString();
-		duration = tds[2].getText().toString();
-		received = tds[3].getText().toString();
-		sent = tds[4].getText().toString();
-
-		div = div.getElementsByAttValue("class",
-				"kabinet-styled_table-wrap box_shadow border_rad", true, true)[5];
-		tableTag = div.getChildTags()[0].findElementByName("table", true);
-		trs = tableTag.getElementsByName("tr", true);
-		int trsLength = trs.length;
-		table = new String[trsLength][COLUMNS_NUMBER];
-		for (int trIdx = 0; trIdx < trsLength; trIdx++) {
-			tds = trs[trIdx].getChildTags();
-			for (int tdIdx = 0; tdIdx < COLUMNS_NUMBER; ++tdIdx) {
-				table[trIdx][tdIdx] = tds[tdIdx].getText().toString();
-			}
-		}
-		return this;
-	}
-
-	@Override
-	protected DataDisplayFragment saveCache() {
-		sharedPreferencesEditor.putInt(TABLE_LENGTH_KEY, table.length);
-		for (int row = 0; row < table.length; row++) {
-			for (int col = 0; col < COLUMNS_NUMBER; col++) {
-				if (table[row][col] != null) {
-					sharedPreferencesEditor.putString(row + "_" + col,
-							table[row][col]);
-				}
-			}
-		}
-		if (ip != null) {
-			sharedPreferencesEditor.putString(IP_KEY, ip);
-		}
-		if (cid != null) {
-			sharedPreferencesEditor.putString(CID_KEY, cid);
-		}
-		if (duration != null) {
-			sharedPreferencesEditor.putString(DURATION_KEY, duration);
-		}
-		if (received != null) {
-			sharedPreferencesEditor.putString(RECEIVED_KEY, received);
-		}
-		if (sent != null) {
-			sharedPreferencesEditor.putString(SENT_KEY, sent);
-		}
-		sharedPreferencesEditor.apply();
-		return this;
-	}
-
-	@Override
-	protected DataDisplayFragment getCache() {
-		int tableLength = sharedPreferences.getInt(TABLE_LENGTH_KEY, 0);
-		if (table == null) {
-			table = new String[tableLength][COLUMNS_NUMBER];
-		}
-		for (int row = 0; row < tableLength; row++) {
-			for (int col = 0; col < COLUMNS_NUMBER; col++) {
-				if (table[row][col] == null) {
-					table[row][col] = sharedPreferences.getString(row + "_"
-							+ col, null);
-				}
-			}
-		}
-		if (ip == null) {
-			ip = sharedPreferences.getString(IP_KEY, "");
-		}
-		if (cid == null) {
-			cid = sharedPreferences.getString(CID_KEY, "");
-		}
-		if (duration == null) {
-			duration = sharedPreferences.getString(DURATION_KEY, "");
-		}
-		if (received == null) {
-			received = sharedPreferences.getString(RECEIVED_KEY, "");
-		}
-		if (sent == null) {
-			sent = sharedPreferences.getString(SENT_KEY, "");
-		}
-		return this;
-	}
 
 	@Override
 	protected DataDisplayFragment flush() {
@@ -237,6 +91,38 @@ public class StatisticsFragment extends DataDisplayFragment implements
 	}
 
 	@Override
+	protected DataDisplayFragment getCache() {
+		int tableLength = sharedPreferences.getInt(TABLE_LENGTH_KEY, 0);
+		if (table == null) {
+			table = new String[tableLength][COLUMNS_NUMBER];
+		}
+		for (int row = 0; row < tableLength; row++) {
+			for (int col = 0; col < COLUMNS_NUMBER; col++) {
+				if (table[row][col] == null) {
+					table[row][col] = sharedPreferences.getString(row + "_"
+							+ col, null);
+				}
+			}
+		}
+		if (ip == null) {
+			ip = sharedPreferences.getString(IP_KEY, "");
+		}
+		if (cid == null) {
+			cid = sharedPreferences.getString(CID_KEY, "");
+		}
+		if (duration == null) {
+			duration = sharedPreferences.getString(DURATION_KEY, "");
+		}
+		if (received == null) {
+			received = sharedPreferences.getString(RECEIVED_KEY, "");
+		}
+		if (sent == null) {
+			sent = sharedPreferences.getString(SENT_KEY, "");
+		}
+		return this;
+	}
+
+	@Override
 	protected String getIndexValue() {
 		return INDEX_VALUE;
 	}
@@ -244,6 +130,120 @@ public class StatisticsFragment extends DataDisplayFragment implements
 	@Override
 	protected String getSharedPreferencesName() {
 		return SHARED_PREFERENCES_NAME;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		View rootView = inflater.inflate(R.layout.fragment_statistics,
+				container, false);
+		tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
+		ipTextView = (TextView) rootView.findViewById(R.id.ipTextView);
+		cidTextView = (TextView) rootView.findViewById(R.id.cidTextView);
+		durationTextView = (TextView) rootView
+				.findViewById(R.id.durationTextView);
+		receivedTextView = (TextView) rootView
+				.findViewById(R.id.receivedTextView);
+		sentTextView = (TextView) rootView.findViewById(R.id.sentTextView);
+		flush();
+
+		vScroll = (ScrollView) rootView.findViewById(R.id.vScroll);
+		hScroll = (HorizontalScrollView) rootView.findViewById(R.id.hScroll);
+		vScroll.setOnTouchListener(this);
+
+		return rootView;
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+
+		float curX, curY;
+
+		switch (event.getAction()) {
+
+		case MotionEvent.ACTION_DOWN:
+			mx = event.getX();
+			my = event.getY();
+			break;
+		case MotionEvent.ACTION_MOVE:
+			curX = event.getX();
+			curY = event.getY();
+			vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+			hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+			mx = curX;
+			my = curY;
+			break;
+		case MotionEvent.ACTION_UP:
+			curX = event.getX();
+			curY = event.getY();
+			vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+			hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+			break;
+		}
+
+		return true;
+	}
+
+	@Override
+	protected DataDisplayFragment saveCache() {
+		sharedPreferencesEditor.putInt(TABLE_LENGTH_KEY, table.length);
+		for (int row = 0; row < table.length; row++) {
+			for (int col = 0; col < COLUMNS_NUMBER; col++) {
+				if (table[row][col] != null) {
+					sharedPreferencesEditor.putString(row + "_" + col,
+							table[row][col]);
+				}
+			}
+		}
+		if (ip != null) {
+			sharedPreferencesEditor.putString(IP_KEY, ip);
+		}
+		if (cid != null) {
+			sharedPreferencesEditor.putString(CID_KEY, cid);
+		}
+		if (duration != null) {
+			sharedPreferencesEditor.putString(DURATION_KEY, duration);
+		}
+		if (received != null) {
+			sharedPreferencesEditor.putString(RECEIVED_KEY, received);
+		}
+		if (sent != null) {
+			sharedPreferencesEditor.putString(SENT_KEY, sent);
+		}
+		sharedPreferencesEditor.apply();
+		return this;
+	}
+
+	@Override
+	public DataDisplayFragment update() throws KeyManagementException,
+			CertificateException, KeyStoreException, NoSuchAlgorithmException,
+			IOException {
+		TagNode div = update(null);
+		TagNode tableTag = div.findElementByAttValue("id",
+				"kabinet-filter_table", true, true).findElementByName("table",
+				true);
+		TagNode[] trs = tableTag.getElementsByName("tr", true);
+		TagNode[] tds = trs[1].getChildTags();
+		ip = tds[0].getText().toString();
+		cid = tds[1].getText().toString();
+		duration = tds[2].getText().toString();
+		received = tds[3].getText().toString();
+		sent = tds[4].getText().toString();
+
+		div = div.getElementsByAttValue("class",
+				"kabinet-styled_table-wrap box_shadow border_rad", true, true)[5];
+		tableTag = div.getChildTags()[0].findElementByName("table", true);
+		trs = tableTag.getElementsByName("tr", true);
+		int trsLength = trs.length;
+		table = new String[trsLength][COLUMNS_NUMBER];
+		for (int trIdx = 0; trIdx < trsLength; trIdx++) {
+			tds = trs[trIdx].getChildTags();
+			for (int tdIdx = 0; tdIdx < COLUMNS_NUMBER; ++tdIdx) {
+				table[trIdx][tdIdx] = tds[tdIdx].getText().toString();
+			}
+		}
+		return this;
 	}
 
 }

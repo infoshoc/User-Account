@@ -19,14 +19,6 @@ import android.widget.ProgressBar;
 public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-	public void setStartedUpdate() {
-		progressBar.setVisibility(View.VISIBLE);
-	}
-
-	public void setFinishedUpdate() {
-		progressBar.setVisibility(View.INVISIBLE);
-	}
-
 	public ProgressBar progressBar;
 
 	/**
@@ -41,6 +33,23 @@ public class MainActivity extends ActionBarActivity implements
 	 */
 	private CharSequence mTitle;
 
+	private final static String IS_SETTINGS_KEY = "isSettings";
+
+	Boolean isSettings = false;
+
+	private static final int SECTION_NUMBER_USER_INFO = 0;
+
+	private static final int SECTION_NUMBER_MONEY_OPERATIONS = 1;
+	private static final int SECTION_NUMBER_INTERNET = 2;
+
+	private static final int SECTION_NUMBER_SUPPORT = 3;
+
+	private static final int SECTION_NUMBER_LOGOUT = 4;
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.id.drawer_layout);
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,22 +71,18 @@ public class MainActivity extends ActionBarActivity implements
 			openSettings();
 		}
 	}
-
-	private final static String IS_SETTINGS_KEY = "isSettings";
-	Boolean isSettings = false;
-
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(IS_SETTINGS_KEY, isSettings);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (!mNavigationDrawerFragment.isDrawerOpen()) {
+			// Only show items in the action bar relevant to this screen
+			// if the drawer is not showing. Otherwise, let the drawer
+			// decide what to show in the action bar.
+			getMenuInflater().inflate(R.menu.main, menu);
+			restoreActionBar();
+			return true;
+		}
+		return super.onCreateOptionsMenu(menu);
 	}
-
-	private static final int SECTION_NUMBER_USER_INFO = 0;
-	private static final int SECTION_NUMBER_MONEY_OPERATIONS = 1;
-	private static final int SECTION_NUMBER_INTERNET = 2;
-	private static final int SECTION_NUMBER_SUPPORT = 3;
-	private static final int SECTION_NUMBER_LOGOUT = 4;
-
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		isSettings = false;
@@ -152,37 +157,6 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	public void restoreActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			// Only show items in the action bar relevant to this screen
-			// if the drawer is not showing. Otherwise, let the drawer
-			// decide what to show in the action bar.
-			getMenuInflater().inflate(R.menu.main, menu);
-			restoreActionBar();
-			return true;
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	private void openSettings() {
-		isSettings = true;
-		mTitle = getString(R.string.action_settings);
-		getActionBar().setTitle(mTitle);
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager
-				.beginTransaction();
-		fragmentTransaction.replace(R.id.container, new SettingsFragment())
-				.addToBackStack(null).commit();
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -198,8 +172,34 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		setContentView(R.id.drawer_layout);
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(IS_SETTINGS_KEY, isSettings);
+	}
+
+	private void openSettings() {
+		isSettings = true;
+		mTitle = getString(R.string.action_settings);
+		getActionBar().setTitle(mTitle);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.container, new SettingsFragment())
+				.addToBackStack(null).commit();
+	}
+
+	public void restoreActionBar() {
+		ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle(mTitle);
+	}
+
+	public void setFinishedUpdate() {
+		progressBar.setVisibility(View.INVISIBLE);
+	}
+
+	public void setStartedUpdate() {
+		progressBar.setVisibility(View.VISIBLE);
 	}
 }
