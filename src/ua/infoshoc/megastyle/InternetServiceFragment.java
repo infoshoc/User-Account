@@ -127,7 +127,7 @@ public class InternetServiceFragment extends DataDisplayFragment {
 	@Override
 	protected DataDisplayFragment saveCache() {
 		for (Integer i = 0; i < FIELDS_SIZE; i++) {
-			if ( values[i] != null ){
+			if (values[i] != null) {
 				sharedPreferencesEditor.putString(i.toString(),
 						values[i].toString());
 			}

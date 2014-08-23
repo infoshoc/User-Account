@@ -131,7 +131,7 @@ public abstract class DataDisplayFragment extends Fragment {
 		updateAsyncTask.cancel(true);
 		super.onStop();
 	}
-	
+
 	private class Update extends AsyncTask<Void, Integer, Void> {
 		protected void onPreExecute() {
 			MainActivity mainActivity = (MainActivity) getActivity();

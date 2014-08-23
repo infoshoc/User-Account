@@ -144,25 +144,25 @@ public class StatisticsFragment extends DataDisplayFragment implements
 		sharedPreferencesEditor.putInt(TABLE_LENGTH_KEY, table.length);
 		for (int row = 0; row < table.length; row++) {
 			for (int col = 0; col < COLUMNS_NUMBER; col++) {
-				if ( table[row][col] != null ){
+				if (table[row][col] != null) {
 					sharedPreferencesEditor.putString(row + "_" + col,
-						table[row][col]);
+							table[row][col]);
 				}
 			}
 		}
-		if ( ip != null ){
+		if (ip != null) {
 			sharedPreferencesEditor.putString(IP_KEY, ip);
 		}
-		if ( cid != null ){
+		if (cid != null) {
 			sharedPreferencesEditor.putString(CID_KEY, cid);
 		}
-		if ( duration != null ){
+		if (duration != null) {
 			sharedPreferencesEditor.putString(DURATION_KEY, duration);
 		}
-		if ( received != null ){
+		if (received != null) {
 			sharedPreferencesEditor.putString(RECEIVED_KEY, received);
 		}
-		if ( sent != null ){
+		if (sent != null) {
 			sharedPreferencesEditor.putString(SENT_KEY, sent);
 		}
 		sharedPreferencesEditor.apply();

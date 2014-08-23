@@ -60,13 +60,17 @@ public class SettingsFragment extends Fragment implements
 		case R.id.notificationSwitch:
 			if (isChecked) {
 				criticalDepositEditText.setEnabled(true);
-				NotificationAlarm.setAlarm(getActivity().getApplicationContext());
+				NotificationAlarm.setAlarm(getActivity()
+						.getApplicationContext());
 			} else {
 				criticalDepositEditText.setEnabled(false);
-				NotificationAlarm.stopAlarm(getActivity().getApplicationContext());
+				NotificationAlarm.stopAlarm(getActivity()
+						.getApplicationContext());
 			}
-			sharedPreferencesEditor.putBoolean(NOTIFICATION_SWITCH_NAME,
-					isChecked).apply();
+			/*
+			 * sharedPreferencesEditor.putBoolean(NOTIFICATION_SWITCH_NAME,
+			 * isChecked).apply();
+			 */
 			break;
 		}
 	}

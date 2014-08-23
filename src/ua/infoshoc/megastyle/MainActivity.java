@@ -130,7 +130,8 @@ public class MainActivity extends ActionBarActivity implements
 												.edit().clear().apply();
 									}
 
-									NotificationAlarm.stopAlarm(getApplicationContext());
+									NotificationAlarm
+											.stopAlarm(getApplicationContext());
 
 									Intent intent = new Intent(
 											getApplicationContext(),

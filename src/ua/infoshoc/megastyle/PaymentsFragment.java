@@ -91,16 +91,16 @@ public class PaymentsFragment extends DataDisplayFragment {
 		sharedPreferencesEditor.putInt(TABLE_LENGTH_KEY, table.length);
 		for (int row = 0; row < table.length; row++) {
 			for (int col = 0; col < COLUMNS_NUMBER; col++) {
-				if ( table[row][col] != null ){
+				if (table[row][col] != null) {
 					sharedPreferencesEditor.putString(row + "_" + col,
 							table[row][col]);
 				}
 			}
 		}
-		if ( overall != null ){
+		if (overall != null) {
 			sharedPreferencesEditor.putString(OVERALL_KEY, overall);
 		}
-		if ( sum != null ){
+		if (sum != null) {
 			sharedPreferencesEditor.putString(SUM_KEY, sum);
 		}
 		sharedPreferencesEditor.apply();
